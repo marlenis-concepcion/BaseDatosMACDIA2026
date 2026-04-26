@@ -144,8 +144,8 @@ GO
 -- Vehiculos registrados por los clientes.
 CREATE TABLE Vehiculo (
     Vehiculo_ID                   INT             IDENTITY(1,1) NOT NULL,
-    Vehiculo_ClienteID            INT             NOT NULL,
-    Vehiculo_TipoVehiculoID       INT             NOT NULL,
+    Vehiculo_Cliente_ID           INT             NOT NULL,
+    Vehiculo_TipoVehiculo_ID      INT             NOT NULL,
     Vehiculo_Placa                VARCHAR(20)     NOT NULL,
     Vehiculo_Marca                VARCHAR(60)     NOT NULL,
     Vehiculo_Modelo               VARCHAR(60)     NOT NULL,
@@ -157,8 +157,8 @@ CREATE TABLE Vehiculo (
     CONSTRAINT PK_Vehiculo PRIMARY KEY (Vehiculo_ID),
     CONSTRAINT UQ_Vehiculo_Placa UNIQUE (Vehiculo_Placa),
     CONSTRAINT UQ_Vehiculo_VIN UNIQUE (Vehiculo_VIN),
-    CONSTRAINT FK_Vehiculo_Cliente FOREIGN KEY (Vehiculo_ClienteID) REFERENCES Cliente(Cliente_ID),
-    CONSTRAINT FK_Vehiculo_Tipo FOREIGN KEY (Vehiculo_TipoVehiculoID) REFERENCES TipoVehiculo(TipoVehiculo_ID),
+    CONSTRAINT FK_Vehiculo_Cliente FOREIGN KEY (Vehiculo_Cliente_ID) REFERENCES Cliente(Cliente_ID),
+    CONSTRAINT FK_Vehiculo_Tipo FOREIGN KEY (Vehiculo_TipoVehiculo_ID) REFERENCES TipoVehiculo(TipoVehiculo_ID),
     CONSTRAINT CHK_Vehiculo_Anio CHECK (Vehiculo_Anio BETWEEN 1900 AND 2035),
     CONSTRAINT CHK_Vehiculo_Valor CHECK (Vehiculo_ValorAsegurado > 0),
     CONSTRAINT CHK_Vehiculo_Estatus CHECK (Vehiculo_Estatus IN ('Activo', 'Inactivo'))
@@ -234,7 +234,7 @@ GO
 CREATE TABLE Pago (
     Pago_ID                       INT             IDENTITY(1,1) NOT NULL,
     Pago_FacturaPolizaID         INT             NOT NULL,
-    Pago_ClienteID               INT             NOT NULL,
+    Pago_Cliente_ID              INT             NOT NULL,
     Pago_Fecha                    DATETIME        NOT NULL,
     Pago_Monto                    DECIMAL(12,2)   NOT NULL,
     Pago_Metodo                   VARCHAR(20)     NOT NULL,
@@ -244,7 +244,7 @@ CREATE TABLE Pago (
     CONSTRAINT PK_Pago PRIMARY KEY (Pago_ID),
     CONSTRAINT UQ_Pago_Referencia UNIQUE (Pago_Referencia),
     CONSTRAINT FK_Pago_Factura FOREIGN KEY (Pago_FacturaPolizaID) REFERENCES FacturaPoliza(FacturaPoliza_ID),
-    CONSTRAINT FK_Pago_Cliente FOREIGN KEY (Pago_ClienteID) REFERENCES Cliente(Cliente_ID),
+    CONSTRAINT FK_Pago_Cliente FOREIGN KEY (Pago_Cliente_ID) REFERENCES Cliente(Cliente_ID),
     CONSTRAINT CHK_Pago_Monto CHECK (Pago_Monto > 0),
     CONSTRAINT CHK_Pago_Metodo CHECK (Pago_Metodo IN ('Efectivo', 'Transferencia', 'Tarjeta', 'Cheque')),
     CONSTRAINT CHK_Pago_Estatus CHECK (Pago_Estatus IN ('Pendiente', 'Aplicado', 'Anulado'))

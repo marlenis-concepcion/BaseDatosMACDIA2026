@@ -59,8 +59,8 @@ GO
 -- Consulta 2: Mostrar todos los vehiculos asegurados
 -- Consulta la tabla Vehiculo con todos sus atributos.
 SELECT  V.Vehiculo_ID,
-        V.Vehiculo_ClienteID,
-        V.Vehiculo_TipoVehiculoID,
+        V.Vehiculo_Cliente_ID,
+        V.Vehiculo_TipoVehiculo_ID,
         V.Vehiculo_Placa,
         V.Vehiculo_Marca,
         V.Vehiculo_Modelo,
@@ -124,7 +124,7 @@ SELECT  P.Pago_ID,
         P.Pago_Referencia,
         P.Pago_Estatus
 FROM    Pago AS P
-INNER JOIN Cliente AS C ON C.Cliente_ID = P.Pago_ClienteID
+INNER JOIN Cliente AS C ON C.Cliente_ID = P.Pago_Cliente_ID
 ORDER BY P.Pago_Monto DESC;
 GO
 
@@ -190,7 +190,7 @@ SELECT  C.Cliente_ID,
         C.Cliente_Nombre + ' ' + C.Cliente_Apellido AS Cliente,
         SUM(P.Pago_Monto) AS Total_Pagado_RD
 FROM    Cliente AS C
-INNER JOIN Pago AS P ON P.Pago_ClienteID = C.Cliente_ID
+INNER JOIN Pago AS P ON P.Pago_Cliente_ID = C.Cliente_ID
 GROUP BY C.Cliente_ID, C.Cliente_Nombre, C.Cliente_Apellido
 ORDER BY Total_Pagado_RD DESC, Cliente;
 GO
@@ -220,7 +220,7 @@ SELECT  C.Cliente_ID,
         C.Cliente_Nombre + ' ' + C.Cliente_Apellido AS Cliente,
         SUM(P.Pago_Monto) AS Total_Pagado_RD
 FROM    Cliente AS C
-INNER JOIN Pago AS P ON P.Pago_ClienteID = C.Cliente_ID
+INNER JOIN Pago AS P ON P.Pago_Cliente_ID = C.Cliente_ID
 GROUP BY C.Cliente_ID, C.Cliente_Nombre, C.Cliente_Apellido
 HAVING  SUM(P.Pago_Monto) > @MontoMinimo
 ORDER BY Total_Pagado_RD DESC, Cliente;
@@ -296,7 +296,7 @@ SELECT  DISTINCT
         C.Cliente_Ciudad,
         P.Pago_Monto
 FROM    Cliente AS C
-INNER JOIN Pago AS P ON P.Pago_ClienteID = C.Cliente_ID
+INNER JOIN Pago AS P ON P.Pago_Cliente_ID = C.Cliente_ID
 WHERE   P.Pago_Monto > (
             SELECT AVG(Pago_Monto)
             FROM Pago

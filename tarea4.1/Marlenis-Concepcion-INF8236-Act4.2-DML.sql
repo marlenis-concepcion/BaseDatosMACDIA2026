@@ -191,8 +191,8 @@ GO
 
 -- 20 vehiculos vinculados a clientes y tipos de vehiculo.
 INSERT INTO Vehiculo (
-    Vehiculo_ClienteID,
-    Vehiculo_TipoVehiculoID,
+    Vehiculo_Cliente_ID,
+    Vehiculo_TipoVehiculo_ID,
     Vehiculo_Placa,
     Vehiculo_Marca,
     Vehiculo_Modelo,
@@ -327,7 +327,7 @@ GO
 -- 20 pagos aplicados a las facturas.
 INSERT INTO Pago (
     Pago_FacturaPolizaID,
-    Pago_ClienteID,
+    Pago_Cliente_ID,
     Pago_Fecha,
     Pago_Monto,
     Pago_Metodo,

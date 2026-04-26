@@ -1,0 +1,212 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║               🗺️  MAPA DE NAVEGACIÓN - ¿QUÉ ARCHIVO LEER?                    ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ SI QUIERO...                              │ ABRE ESTE ARCHIVO              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Ejecutar AHORA                            │ ./setup-y-ejecutar.sh          │
+│                                           │ (No es un archivo para leer)    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Entender en 30 segundos                   │ INICIO-RAPIDO.md               │
+│                                           │ (Lo más corto)                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Saber qué archivo contiene qué            │ README.md                      │
+│                                           │ o INDEX.md                     │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Documentación PROFESIONAL COMPLETA        │ GUIA-COMPLETA-DOCKER-MYSQL.md  │
+│ (Todos los detalles)                      │                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Aprender TODOS los comandos               │ COMANDOS-RAPIDOS.md            │
+│                                           │                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Adaptar para PROYECTO 5.1                 │ TEMPLATE-PARA-PROYECTOS.md     │
+│ (Paso a paso)                             │                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Adaptar para PROYECTO FINAL               │ TEMPLATE-PARA-PROYECTOS.md     │
+│ (Mismo que 5.1)                           │                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Troubleshooting / Problemas               │ GUIA-COMPLETA-DOCKER-MYSQL.md  │
+│ (Sección "Solución de Problemas")         │                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Entender la estructura SQL                │ Marlenis-Concepcion-...        │
+│                                           │ Script-Maestro-Actualizado.sql │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Ver solo las tablas (DDL)                 │ Marlenis-Concepcion-...        │
+│                                           │ Act4.2-DDL.sql                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Ver solo los datos (DML)                  │ Marlenis-Concepcion-...        │
+│                                           │ Act4.2-DML.sql                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Ver ejemplos de consultas (DQL)           │ Marlenis-Concepcion-...        │
+│                                           │ Act4.2-DQL.sql                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 FLUJOS RÁPIDOS POR OBJETIVO:
+
+┌─ OBJETIVO: Ejecutar todo AHORA mismo
+│
+├─ Comando:
+│   cd <tu-carpeta-proyecto>/tarea4.1
+│   ./setup-y-ejecutar.sh
+│
+├─ Tiempo: 50 segundos
+└─ Resultado: Promedio_Pagos_RD = 17525.000000
+
+
+┌─ OBJETIVO: Entender qué tengo
+│
+├─ Lee: README.md (5 min)
+├─ O lee: INDEX.md (3 min)
+├─ O lee: INICIO-RAPIDO.md (1 min)
+└─ Resultado: Sabes qué archivo contiene qué
+
+
+┌─ OBJETIVO: Aprender a usar Docker + MySQL
+│
+├─ Lee: GUIA-COMPLETA-DOCKER-MYSQL.md
+├─ Tiempo: 15 minutos
+└─ Resultado: Entiendes todo el sistema
+
+
+┌─ OBJETIVO: Copiar para PROYECTO 5.1
+│
+├─ 1. Lee: TEMPLATE-PARA-PROYECTOS.md (5 min)
+├─ 2. Copia: setup-y-ejecutar.sh a tu carpeta
+├─ 3. Copia: GUIA-COMPLETA-DOCKER-MYSQL.md a tu carpeta
+├─ 4. Copia: Tu Script Maestro a tu carpeta
+├─ 5. Edita: Línea 37 en setup-y-ejecutar.sh (cambiar nombre SQL)
+├─ 6. Edita: Línea 52 en setup-y-ejecutar.sh (cambiar consulta objetivo)
+├─ 7. Ejecuta: ./setup-y-ejecutar.sh
+└─ Resultado: Proyecto 5.1 listo
+
+
+┌─ OBJETIVO: Resolver un problema
+│
+├─ Abre: GUIA-COMPLETA-DOCKER-MYSQL.md
+├─ Ve a: Sección "Solución de Problemas"
+├─ O ejecuta:
+│   docker rm -f mysql_uasd
+│   ./setup-y-ejecutar.sh
+└─ Resultado: Sistema limpio y funcionando
+
+
+┌─ OBJETIVO: Ver todos los comandos disponibles
+│
+├─ Abre: COMANDOS-RAPIDOS.md
+├─ O abre: GUIA-COMPLETA-DOCKER-MYSQL.md → Sección "Comandos Útiles"
+└─ Resultado: Referencia rápida de todos los comandos
+
+
+┌─ OBJETIVO: Ejecutar una consulta personalizada
+│
+├─ Abre MySQL interactivo:
+│   docker exec -it mysql_uasd mysql -u root -pP@ssw0rd1234 SeguroVehiculos
+├─ Escribe tu consulta SQL
+├─ Lee ejemplos en: COMANDOS-RAPIDOS.md
+└─ Resultado: Tus propias consultas ejecutándose
+
+
+┌─ OBJETIVO: Hacer un backup de los datos
+│
+├─ Comando:
+│   docker exec mysql_uasd mysqldump -u root -pP@ssw0rd1234 SeguroVehiculos > backup.sql
+├─ Referencia: COMANDOS-RAPIDOS.md
+└─ Resultado: Archivo backup.sql con toda tu BD
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 ORDEN RECOMENDADO DE LECTURA (Primera vez):
+
+  1. INICIO-RAPIDO.md (30 segundos) ← Empieza AQUÍ
+     └─ Entiende lo básico
+
+  2. Ejecuta: ./setup-y-ejecutar.sh (50 segundos)
+     └─ Verifica que funciona
+
+  3. README.md (2 minutos)
+     └─ Conoce qué archivos tienes
+
+  4. GUIA-COMPLETA-DOCKER-MYSQL.md (10 minutos)
+     └─ Documentación profesional completa
+
+  5. TEMPLATE-PARA-PROYECTOS.md (5 minutos) - CUANDO EMPIECES 5.1
+     └─ Instrucciones para proyecto 5.1
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 BÚSQUEDA RÁPIDA POR PALABRA CLAVE:
+
+"No me funciona"              → GUIA-COMPLETA-DOCKER-MYSQL.md
+                                (Sección: Solución de Problemas)
+
+"¿Cómo ejecuto?"              → INICIO-RAPIDO.md
+                                o GUIA-COMPLETA-DOCKER-MYSQL.md
+
+"Quiero ver tablas"           → COMANDOS-RAPIDOS.md
+
+"¿Qué archivos copiar?"       → TEMPLATE-PARA-PROYECTOS.md
+
+"Quiero escribir consultas"   → GUIA-COMPLETA-DOCKER-MYSQL.md
+                                (Sección: Modo Interactivo MySQL)
+
+"Docker/MySQL comandos"       → COMANDOS-RAPIDOS.md
+
+"Índice de todo"              → README.md o INDEX.md
+
+"Rápido, solo dime cómo"      → INICIO-RAPIDO.md
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ VERIFICACIÓN RÁPIDA:
+
+¿Sistema funcionando?
+  $ ./setup-y-ejecutar.sh
+  $ Deberías ver: Promedio_Pagos_RD = 17525.000000
+
+¿Puedo ver las tablas?
+  $ docker exec mysql_uasd mysql -u root -pP@ssw0rd1234 SeguroVehiculos -e "SHOW TABLES;"
+
+¿Puedo entrar a MySQL?
+  $ docker exec -it mysql_uasd mysql -u root -pP@ssw0rd1234 SeguroVehiculos
+
+¿Puedo contar registros?
+  $ docker exec mysql_uasd mysql -u root -pP@ssw0rd1234 SeguroVehiculos -e "SELECT COUNT(*) FROM Cliente;"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📌 PRÓXIMOS PASOS:
+
+  ☐ Ejecuta: ./setup-y-ejecutar.sh
+  ☐ Lee: INICIO-RAPIDO.md
+  ☐ Lee: README.md
+  ☐ Guarda: TEMPLATE-PARA-PROYECTOS.md (para proyecto 5.1)
+  ☐ Guarda: GUIA-COMPLETA-DOCKER-MYSQL.md (como referencia)
+  ☐ Prueba: docker exec -it mysql_uasd mysql -u root -pP@ssw0rd1234 SeguroVehiculos
+
+═══════════════════════════════════════════════════════════════════════════════
+
+💡 ATAJO DE TECLADO (si tienes VSCode):
+
+  1. Abre esta carpeta en VSCode
+  2. Ctrl+P (o Cmd+P en Mac)
+  3. Empieza a escribir el nombre del archivo
+  4. Enter para abrirlo
+
+═══════════════════════════════════════════════════════════════════════════════
+
+¿Pregunta? Revisa estos archivos en orden:
+
+  1. INICIO-RAPIDO.md (respuestas inmediatas)
+  2. GUIA-COMPLETA-DOCKER-MYSQL.md (respuestas detalladas)
+  3. COMANDOS-RAPIDOS.md (comando exacto que necesitas)
+  4. TEMPLATE-PARA-PROYECTOS.md (para tu proyecto siguiente)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+¡Listo para empezar! 🚀
+

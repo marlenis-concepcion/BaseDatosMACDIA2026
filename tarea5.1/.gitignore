@@ -1,0 +1,27 @@
+# Environment variables (do NOT commit)
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore
+
+# Backups
+*.sql.bak
+*.sql.backup
+dump_*.sql
+
+# Logs
+*.log
+docker-compose.log
