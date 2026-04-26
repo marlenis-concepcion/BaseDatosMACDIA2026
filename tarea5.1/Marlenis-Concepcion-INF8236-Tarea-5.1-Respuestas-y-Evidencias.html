@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tarea 5.1 - DBNomina</title>
+  <style>
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      color: #1c1c1c;
+      margin: 40px auto;
+      max-width: 960px;
+      line-height: 1.55;
+      background: #ffffff;
+    }
+    h1, h2, h3 {
+      color: #123b59;
+      margin-top: 28px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+    h2 {
+      border-bottom: 2px solid #d7e3ec;
+      padding-bottom: 6px;
+      font-size: 22px;
+    }
+    h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .cover, .note, .code, .evidence {
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .cover {
+      border: 1px solid #cddae4;
+      background: linear-gradient(180deg, #f7fbff 0%, #eef5fa 100%);
+      margin-bottom: 28px;
+    }
+    .meta {
+      margin: 0;
+      text-align: center;
+    }
+    .meta strong {
+      color: #0f2d44;
+    }
+    .note {
+      background: #f8f5ea;
+      border-left: 5px solid #c59a2b;
+      margin: 18px 0;
+    }
+    .code {
+      background: #f4f7fb;
+      border: 1px solid #dbe5ef;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      white-space: pre-wrap;
+      font-size: 13px;
+      line-height: 1.45;
+      margin: 14px 0;
+    }
+    .evidence {
+      background: #fbfdff;
+      border: 1px solid #d9e6f2;
+      margin: 18px 0 24px 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #cad7e2;
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #eaf2f9;
+      color: #133852;
+    }
+    ul {
+      margin-top: 8px;
+    }
+    .small {
+      font-size: 13px;
+      color: #526474;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <div class="cover">
+    <h1>Tarea 5.1: Consultas Avanzadas, SP y Trigger en SQL Server</h1>
+    <p class="meta"><strong>Universidad Autonoma de Santo Domingo (UASD)</strong></p>
+    <p class="meta">Maestria en Ciencia de Datos e Inteligencia Artificial</p>
+    <p class="meta">Asignatura: Base de Datos I - INF-8236-C2</p>
+    <p class="meta">Unidad 5: Administracion, Optimizacion y Tendencias en Bases de Datos</p>
+    <p class="meta">Estudiante: <strong>Marlenis Judith Concepcion Cuevas</strong></p>
+    <p class="meta">Tutora: Mtra. Rosmery Alberto M.</p>
+    <p class="meta">Fecha: 19 de abril de 2026</p>
+  </div>
+
+  <div class="note">
+    <strong>Archivos entregados:</strong>
+    <ul>
+      <li><code>Marlenis-Concepcion-INF8236-Tarea-5.1-DBNomina.sql</code> con todos los scripts.</li>
+      <li><code>Marlenis-Concepcion-INF8236-Tarea-5.1-Respuestas-y-Evidencias.docx</code> con respuestas y evidencias documentadas.</li>
+    </ul>
+    <div class="small">
+      Las evidencias mostradas a continuacion fueron documentadas como salida esperada coherente con el script entregado y sus datos de prueba, para que puedan compararse o sustituirse por capturas reales al ejecutar el archivo en SSMS.
+    </div>
+  </div>
+
+  <h2>Supuestos Aplicados</h2>
+  <ul>
+    <li>Se agrego la tabla <code>TipoPeriodoNomina</code> porque el enunciado la referencia pero no la define.</li>
+    <li>Se agrego la columna <code>TransaccionNomina_Monto</code> porque el ejercicio 3 filtra por ella.</li>
+    <li>En SQL Server la "vista materializada" se resolvio como una <strong>indexed view</strong> con <code>WITH SCHEMABINDING</code>.</li>
+    <li>Para el trigger asociado a <code>SP_Consultar_NominaEmpleado</code> se creo una tabla cache llamada <code>NominaEmpleadoConsultaCache</code>.</li>
+    <li>Para AFP, ARS e ISR se usaron porcentajes y escala 2026 de Republica Dominicana.</li>
+  </ul>
+
+  <h2>Respuestas Por Ejercicio</h2>
+
+  <h3>1. Analisis de planes de ejecucion</h3>
+  <p><strong>Pregunta 1.</strong> Antes de crear el indice sobre <code>Empleado_ID</code>, la operacion esperada es <code>Clustered Index Scan</code> sobre la PK de <code>TransaccionNomina</code>, porque la tabla solo tiene el indice clustered del identificador.</p>
+  <p><strong>Pregunta 2.</strong> Antes de optimizar: <code>Scan</code>. Despues de crear el indice no agrupado: <code>Index Seek</code>, con posible <code>Key Lookup</code> por usar <code>SELECT *</code>.</p>
+  <p><strong>Pregunta 3.</strong> Si la consulta se ejecuta sola, SSMS suele mostrar <code>100%</code> del lote como costo relativo, pero el punto importante es que el costo estimado baja despues del indice y se reduce la lectura innecesaria de paginas.</p>
+
+  <h3>2. Indices y optimizacion del rendimiento</h3>
+  <p><strong>Pregunta 1.</strong> El plan cambia de <code>Clustered Index Scan</code> a <code>NonClustered Index Seek</code>.</p>
+  <p><strong>Pregunta 2.</strong> Si, mejora el rendimiento porque el motor deja de revisar toda la estructura clustered para ir directo a las filas del empleado filtrado.</p>
+
+  <h3>3. Estadisticas en SQL Server</h3>
+  <p>Las estadisticas son importantes porque permiten al optimizador estimar cuantas filas devolvera una condicion, elegir mejor entre <code>Seek</code> o <code>Scan</code>, y decidir planes mas eficientes para filtros, joins y agregaciones.</p>
+
+  <h3>4. Concepto ACID y manejo de transacciones</h3>
+  <p><strong>Pregunta 1.</strong> Si ocurre un error antes del <code>COMMIT</code> y se ejecuta <code>ROLLBACK</code>, ningun cambio queda persistido.</p>
+  <p><strong>Pregunta 2.</strong> La propiedad ACID que garantiza permanencia es <strong>Durability</strong>.</p>
+
+  <h3>5. Uso de ROLLBACK y SAVEPOINT</h3>
+  <p><strong>Pregunta 1.</strong> Permanecen los registros insertados antes del <code>SAVEPOINT</code>. La actualizacion posterior es la que se revierte.</p>
+  <p><strong>Pregunta 2.</strong> La ventaja del <code>SAVEPOINT</code> es permitir un <strong>rollback parcial</strong> sin perder toda la transaccion.</p>
+
+  <h3>6. Concurrencia y bloqueos</h3>
+  <p><strong>Pregunta 1.</strong> La segunda sesion queda esperando el recurso o se bloquea hasta que la primera confirme o revierta.</p>
+  <p><strong>Pregunta 2.</strong> Se produce porque la primera transaccion mantiene un bloqueo exclusivo sobre la misma fila.</p>
+
+  <h3>7. Niveles de aislamiento</h3>
+  <p><strong>Pregunta 1.</strong> <code>READ COMMITTED</code> evita las <strong>lecturas sucias</strong>.</p>
+  <p><strong>Pregunta 2.</strong> Una dirty read ocurre cuando una transaccion lee datos todavia no confirmados por otra transaccion, y esos datos luego pueden revertirse.</p>
+
+  <h3>8. Stored Procedures</h3>
+  <p><strong>Pregunta 1.</strong> Ventajas: reutilizacion, seguridad, mantenimiento centralizado, menor duplicidad de codigo y mejor control de la logica del negocio.</p>
+  <p><strong>Pregunta 2.</strong> Se ejecutan con <code>EXEC</code>, por ejemplo: <code>EXEC dbo.SP_Consultar_NominaEmpleado @Empleado_ID = 3;</code></p>
+
+  <h3>9. Funciones en SQL Server</h3>
+  <p>Se recomienda usar funciones cuando se necesita una logica de calculo reutilizable y consistente, por ejemplo salario anual, impuestos o conversiones que se repiten en varias consultas.</p>
+
+  <h3>10. Triggers</h3>
+  <p>Automatizar con triggers ayuda a mantener auditoria, integridad, trazabilidad e historial sin depender de que el usuario recuerde ejecutar procesos manuales.</p>
+
+  <h3>11. Vistas materializadas</h3>
+  <p><strong>Pregunta 1.</strong> Una vista normal es virtual; una vista materializada o indexada guarda estructura fisica para acelerar lecturas.</p>
+  <p><strong>Pregunta 2.</strong> Se recomienda en consultas agregadas muy usadas, con gran volumen de lectura y cambios relativamente controlados.</p>
+
+  <h3>12. Seguridad: usuarios, roles y permisos</h3>
+  <p><strong>Pregunta 1.</strong> El principio de minimo privilegio significa asignar solo los permisos estrictamente necesarios.</p>
+  <p><strong>Pregunta 2.</strong> La seguridad en BD es importante para proteger confidencialidad, integridad, disponibilidad, auditoria y cumplimiento.</p>
+
+  <div class="page-break"></div>
+  <h2>Evidencias de Corrida Documentadas</h2>
+
+  <div class="evidence">
+    <h3>Evidencia 1. Consulta por empleado especifico</h3>
+    <div class="code">SELECT *
+FROM dbo.TransaccionNomina
+WHERE Empleado_ID = 3;</div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Numero</th>
+          <th>Periodo</th>
+          <th>Monto Bruto</th>
+          <th>AFP</th>
+          <th>ARS</th>
+          <th>ISR</th>
+          <th>Sueldo Neto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3</td>
+          <td>1003</td>
+          <td>202601</td>
+          <td>78,000.00</td>
+          <td>2,238.60</td>
+          <td>2,371.20</td>
+          <td>6,930.49</td>
+          <td>66,459.71</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>1006</td>
+          <td>202602</td>
+          <td>80,000.00</td>
+          <td>2,296.00</td>
+          <td>2,432.00</td>
+          <td>7,400.94</td>
+          <td>67,871.06</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Interpretacion:</strong> antes del indice, el plan esperado es un <code>Clustered Index Scan</code>; despues del indice, un <code>Index Seek</code>.</p>
+  </div>
+
+  <div class="evidence">
+    <h3>Evidencia 2. Creacion del indice no agrupado</h3>
+    <div class="code">CREATE NONCLUSTERED INDEX IX_TransaccionNomina_Empleado_ID
+ON dbo.TransaccionNomina (Empleado_ID);</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Antes</th>
+          <th>Despues</th>
+          <th>Conclusion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Clustered Index Scan</td>
+          <td>NonClustered Index Seek</td>
+          <td>Menor lectura de datos y mejor tiempo de respuesta</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="evidence">
+    <h3>Evidencia 3. Estadisticas actualizadas</h3>
+    <div class="code">UPDATE STATISTICS dbo.TransaccionNomina;
+
+SELECT *
+FROM dbo.TransaccionNomina
+WHERE TransaccionNomina_Monto &gt; 20000;</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Empleado</th>
+          <th>Monto Bruto</th>
+          <th>Sueldo Neto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1001</td><td>Marlenis Judith Concepcion Cuevas</td><td>42,000.00</td><td>38,792.88</td></tr>
+        <tr><td>1002</td><td>Roberto Byas De la Cruz</td><td>55,000.00</td><td>49,189.83</td></tr>
+        <tr><td>1003</td><td>Victor Perez Padilla</td><td>78,000.00</td><td>66,459.71</td></tr>
+        <tr><td>1004</td><td>Manicaotex Mueses</td><td>120,000.00</td><td>96,098.06</td></tr>
+        <tr><td>1005</td><td>Rosmery Alberto Martinez</td><td>250,000.00</td><td>188,240.97</td></tr>
+        <tr><td>1006</td><td>Victor Perez Padilla</td><td>80,000.00</td><td>67,871.06</td></tr>
+        <tr><td>1007</td><td>Ana Martinez</td><td>32,000.00</td><td>30,108.80</td></tr>
+        <tr><td>1008</td><td>Marlenis Judith Concepcion Cuevas</td><td>42,000.00</td><td>38,792.88</td></tr>
+        <tr><td>1009</td><td>Roberto Byas De la Cruz</td><td>55,000.00</td><td>49,189.83</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="evidence">
+    <h3>Evidencia 4. Transaccion con COMMIT</h3>
+    <div class="code">BEGIN TRAN;
+INSERT INTO dbo.TransaccionNomina (... Numero = 1007 ...);
+COMMIT TRAN;</div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Numero</th>
+          <th>Empleado</th>
+          <th>Monto Bruto</th>
+          <th>Sueldo Neto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>7</td>
+          <td>1007</td>
+          <td>Ana Martinez</td>
+          <td>32,000.00</td>
+          <td>30,108.80</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Resultado:</strong> el registro permanece porque la transaccion fue confirmada con <code>COMMIT</code>.</p>
+  </div>
+
+  <div class="evidence">
+    <h3>Evidencia 5. SAVEPOINT y rollback parcial</h3>
+    <div class="code">BEGIN TRAN;
+INSERT INTO dbo.TransaccionNomina (... Numero = 1008 ...);
+INSERT INTO dbo.TransaccionNomina (... Numero = 1009 ...);
+SAVE TRAN PuntoParcial;
+UPDATE dbo.TransaccionNomina
+SET TransaccionNomina_Comentario = 'Actualizacion revertida por SAVEPOINT'
+WHERE TransaccionNomina_Numero = 1009;
+ROLLBACK TRAN PuntoParcial;
+COMMIT TRAN;</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Numero</th>
+          <th>Comentario final</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1008</td>
+          <td>Transaccion para prueba SAVEPOINT 1</td>
+        </tr>
+        <tr>
+          <td>1009</td>
+          <td>Transaccion para prueba SAVEPOINT 2</td>
+        </tr>
+      </tbody>
+    </table>
+    <p><strong>Resultado:</strong> los inserts permanecen; la actualizacion posterior al <code>SAVEPOINT</code> no.</p>
+  </div>
+
+  <div class="evidence">
+    <h3>Evidencia 6. Stored Procedure de consulta</h3>
+    <div class="code">EXEC dbo.SP_Consultar_NominaEmpleado @Empleado_ID = 3;</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Empleado_ID</th>
+          <th>Transaccion_ID</th>
+          <th>Numero</th>
+          <th>Empleado</th>
+          <th>Periodo</th>
+          <th>Monto Bruto</th>
+          <th>Monto Neto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3</td>
+          <td>3</td>
+          <td>1003</td>
+          <td>Victor Perez Padilla</td>
+          <td>202601</td>
+          <td>78,000.00</td>
+          <td>66,459.71</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>6</td>
+          <td>1006</td>
+          <td>Victor Perez Padilla</td>
+          <td>202602</td>
+          <td>80,000.00</td>
+          <td>67,871.06</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="evidence">
+    <h3>Evidencia 7. Funcion <code>FN_SalarioAnual</code></h3>
+    <div class="code">SELECT
+    E.Empleado_Codigo,
+    E.Empleado_Nombre + ' ' + E.Empleado_Apellido AS Empleado,
+    E.Empleado_SueldoBase AS SueldoMensual,
+    dbo.FN_SalarioAnual(E.Empleado_SueldoBase) AS SalarioAnual
+FROM dbo.Empleado AS E;</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Codigo</th>
+          <th>Empleado</th>
+          <th>Sueldo Mensual</th>
+          <th>Salario Anual</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>E00001</td><td>Marlenis Judith Concepcion Cuevas</td><td>42,000.00</td><td>504,000.00</td></tr>
+        <tr><td>E00002</td><td>Roberto Byas De la Cruz</td><td>55,000.00</td><td>660,000.00</td></tr>
+        <tr><td>E00003</td><td>Victor Perez Padilla</td><td>78,000.00</td><td>936,000.00</td></tr>
+        <tr><td>E00004</td><td>Manicaotex Mueses</td><td>120,000.00</td><td>1,440,000.00</td></tr>
+        <tr><td>E00005</td><td>Rosmery Alberto Martinez</td><td>250,000.00</td><td>3,000,000.00</td></tr>
+        <tr><td>E00006</td><td>Ana Martinez</td><td>32,000.00</td><td>384,000.00</td></tr>
+        <tr><td>E00007</td><td>Jose Amado</td><td>68,000.00</td><td>816,000.00</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="evidence">
+    <h3>Evidencia 8. Triggers, auditoria, cache e historico</h3>
+    <p><strong>a) Insercion de empleado para disparar <code>TR_Empleado_Audit</code></strong></p>
+    <table>
+      <thead>
+        <tr>
+          <th>EmpleadoLog_ID</th>
+          <th>Empleado_ID</th>
+          <th>Codigo</th>
+          <th>NombreCompleto</th>
+          <th>Accion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>2</td><td>7</td><td>E00007</td><td>Jose Amado</td><td>INSERT</td></tr>
+        <tr><td>1</td><td>1</td><td>E00001</td><td>Marlenis Judith Concepcion Cuevas</td><td>UPDATE</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>b) Cache del trigger que ejecuta <code>SP_Consultar_NominaEmpleado</code></strong></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Empleado_ID</th>
+          <th>Numero</th>
+          <th>Empleado_Codigo</th>
+          <th>Periodo</th>
+          <th>Monto Bruto</th>
+          <th>Monto Neto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>7</td><td>1010</td><td>E00007</td><td>202603</td><td>68,000.00</td><td>58,989.11</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>c) Auditoria de transacciones</strong></p>
+    <table>
+      <thead>
+        <tr>
+          <th>TransaccionLog_ID</th>
+          <th>Numero</th>
+          <th>Empleado_ID</th>
+          <th>Monto Bruto</th>
+          <th>Monto Neto</th>
+          <th>Accion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>12</td><td>1010</td><td>7</td><td>68,000.00</td><td>58,989.11</td><td>DELETE</td></tr>
+        <tr><td>11</td><td>1010</td><td>7</td><td>68,000.00</td><td>58,989.11</td><td>UPDATE</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>d) Historico luego del DELETE</strong></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Historico_ID</th>
+          <th>Numero</th>
+          <th>Empleado_ID</th>
+          <th>Monto Bruto</th>
+          <th>Monto Neto</th>
+          <th>Operacion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>1010</td><td>7</td><td>68,000.00</td><td>58,989.11</td><td>DELETE</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="evidence">
+    <h3>Evidencia 9. Vista materializada / indexed view</h3>
+    <div class="code">SELECT
+    V.Empleado_ID,
+    E.Empleado_Codigo,
+    E.Empleado_Nombre + ' ' + E.Empleado_Apellido AS Empleado,
+    V.CantidadTransacciones,
+    V.TotalPagado
+FROM dbo.VW_TotalNominaEmpleado AS V
+INNER JOIN dbo.Empleado AS E
+    ON E.Empleado_ID = V.Empleado_ID
+ORDER BY V.TotalPagado DESC;</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Empleado_ID</th>
+          <th>Codigo</th>
+          <th>Empleado</th>
+          <th>Cantidad Transacciones</th>
+          <th>Total Pagado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>5</td><td>E00005</td><td>Rosmery Alberto Martinez</td><td>1</td><td>188,240.97</td></tr>
+        <tr><td>3</td><td>E00003</td><td>Victor Perez Padilla</td><td>2</td><td>134,330.77</td></tr>
+        <tr><td>2</td><td>E00002</td><td>Roberto Byas De la Cruz</td><td>2</td><td>98,379.66</td></tr>
+        <tr><td>4</td><td>E00004</td><td>Manicaotex Mueses</td><td>1</td><td>96,098.06</td></tr>
+        <tr><td>1</td><td>E00001</td><td>Marlenis Judith Concepcion Cuevas</td><td>2</td><td>77,585.76</td></tr>
+        <tr><td>6</td><td>E00006</td><td>Ana Martinez</td><td>1</td><td>30,108.80</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="evidence">
+    <h3>Evidencia 10. Seguridad: login, usuario, rol y permisos</h3>
+    <div class="code">USE master;
+CREATE LOGIN login_consulta_nomina_marlenis
+WITH PASSWORD = 'Nomina#UASD2026';
+
+USE DBNomina;
+CREATE USER user_consulta_nomina_marlenis
+FOR LOGIN login_consulta_nomina_marlenis;
+
+CREATE ROLE RolConsultaNomina;
+GRANT SELECT ON dbo.TransaccionNomina TO RolConsultaNomina;
+ALTER ROLE RolConsultaNomina
+ADD MEMBER user_consulta_nomina_marlenis;</div>
+    <p><strong>Resultado esperado:</strong> el usuario queda con permisos de solo lectura sobre las tablas y la vista definidas en el script.</p>
+  </div>
+
+  <h2>Conclusiones</h2>
+  <p>La solucion propuesta cubre los 12 puntos solicitados en la tarea: creacion del modelo fisico, optimizacion con indices, estadisticas, manejo de transacciones, aislamiento, procedimientos almacenados, funcion, triggers, vista indexada y seguridad.</p>
+  <p>Ademas, el script deja trazabilidad mediante tablas de log, historico y una cache de consulta para demostrar el uso practico de los procedimientos disparados por triggers.</p>
+
+  <h2>Referencias</h2>
+  <ul>
+    <li>DGII. Escala de ISR 2026 para asalariados: <a href="https://dgii.gov.do/cicloContribuyente/obligacionesTributarias/principalesImpuestos/Paginas/impuestoSobreRenta.aspx">https://dgii.gov.do/cicloContribuyente/obligacionesTributarias/principalesImpuestos/Paginas/impuestoSobreRenta.aspx</a></li>
+    <li>Comunidad de Ayuda DGII. Escala salarial 2026: <a href="https://ayuda.dgii.gov.do/conversations/impuesto-sobre-la-renta-isr/ca687-cul-es-la-escala-salarial-correspondiente-al-ao-2026-del-impuesto-sobre-la-renta-isr/696a664277932619036537b8">https://ayuda.dgii.gov.do/conversations/impuesto-sobre-la-renta-isr/ca687-cul-es-la-escala-salarial-correspondiente-al-ao-2026-del-impuesto-sobre-la-renta-isr/696a664277932619036537b8</a></li>
+    <li>TSS. Manual de preguntas frecuentes, porcentajes de retencion y aporte: <a href="https://tss.gob.do/descargar/506/archivos-variados-sueltos/5332/faq0725-2024.pdf">https://tss.gob.do/descargar/506/archivos-variados-sueltos/5332/faq0725-2024.pdf</a></li>
+    <li>TSS. Topes de cotizacion vigentes para 2026: <a href="https://tss.gob.do/tesoreria-de-la-seguridad-social-informa-nuevos-topes-de-cotizacion-para-el-regimen-contributivo/">https://tss.gob.do/tesoreria-de-la-seguridad-social-informa-nuevos-topes-de-cotizacion-para-el-regimen-contributivo/</a></li>
+  </ul>
+</body>
+</html>
