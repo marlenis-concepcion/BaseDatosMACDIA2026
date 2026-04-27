@@ -76,7 +76,7 @@ Promedio_Pagos_RD = 17,525.00 RD
 2. **Arquitectura de Hardware**: SQL Server no soporta ARM64 (Apple Silicon)
 3. **Sintaxis Específica**: GO statements, IDENTITY, GETDATE() → MySQL equivalentes
 4. **Nomenclatura de FK**: Corrección para usar nombre de tabla referenciada
-5. **Rutas Absolutas**: Eliminadas todas las referencias a /Users/vampy
+5. **Rutas Absolutas**: Eliminadas todas las referencias a rutas locales del sistema
 
 ---
 
@@ -180,7 +180,7 @@ En la Tarea 5.1 se implementaron exitosamente las lecciones aprendidas en Tarea 
 | Aspecto | Tarea 4.1 (Problema) | Tarea 5.1 (Solución) |
 |--------|-------------------|------------------|
 | Sintaxis SQL | SQL Server → Conversión | MySQL nativa desde inicio ✅ |
-| Rutas Absolutas | /Users/vampy presentes | Rutas relativas + .env ✅ |
+| Rutas Absolutas | Rutas locales presentes | Rutas relativas + .env ✅ |
 | Nomenclatura FK | Inconsistente | Por tabla referenciada ✅ |
 | Archivos SQL | Combinados | Separados (DDL/DML/DQL) ✅ |
 | Datos de Prueba | 6-20 registros | 20+ registros garantizados ✅ |
