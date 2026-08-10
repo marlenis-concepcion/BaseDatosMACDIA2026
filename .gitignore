@@ -1,0 +1,13 @@
+BasedeDatosII/uasd_virtual_credentials.json
+BasedeDatosII/Unidad1/PracticaMongoDB/40225495809_Concepcion_PracticaMongoDB.pdf
+BasedeDatosII/Unidad1/PracticaMongoDB/40225495809_Concepcion_PracticaMongoDB_Informe.docx
+BasedeDatosII/Unidad1/PracticaMongoDB/assets/evidencias/*.png
+downloads/
+tools/
+data/
+logs/
+run/
+
+# IA Project Indexer — local index, regenerate anytime with `ia-index`
+.ia-index/
+*.ia-index.json

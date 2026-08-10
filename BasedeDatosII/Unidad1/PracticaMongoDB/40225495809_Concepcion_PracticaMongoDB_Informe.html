@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>40225495809_Concepcion_PracticaMongoDB</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 2.54cm;
+      @top-right {
+        content: counter(page);
+        font-family: "Times New Roman", serif;
+        font-size: 12pt;
+      }
+    }
+
+    body {
+      color: #111;
+      font-family: "Times New Roman", serif;
+      font-size: 12pt;
+      line-height: 2;
+      margin: 0;
+    }
+
+    .cover {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-height: 21.5cm;
+      page-break-after: always;
+      text-align: center;
+    }
+
+    .logo {
+      height: 3.8cm;
+      margin-top: 0.2cm;
+      object-fit: contain;
+      width: 3.8cm;
+    }
+
+    .university {
+      font-size: 14pt;
+      font-weight: bold;
+      margin-top: 0.35cm;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 12pt;
+      margin-top: 0.1cm;
+    }
+
+    .title {
+      font-size: 16pt;
+      font-weight: bold;
+      line-height: 1.5;
+      margin-top: 3cm;
+      text-transform: uppercase;
+    }
+
+    .cover-info {
+      line-height: 1.8;
+      margin-top: 3cm;
+      width: 100%;
+    }
+
+    .place-date {
+      margin-top: auto;
+    }
+
+    h1 {
+      font-size: 12pt;
+      font-weight: bold;
+      line-height: 2;
+      margin: 0 0 12pt;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 12pt;
+      font-weight: bold;
+      line-height: 2;
+      margin: 12pt 0 0;
+      text-align: left;
+    }
+
+    h3 {
+      font-size: 12pt;
+      font-style: italic;
+      font-weight: bold;
+      line-height: 2;
+      margin: 12pt 0 0;
+      text-align: left;
+    }
+
+    p {
+      margin: 0;
+      text-indent: 1.27cm;
+    }
+
+    .no-indent,
+    .cover p,
+    li p {
+      text-indent: 0;
+    }
+
+    ul,
+    ol {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+    code,
+    pre {
+      font-family: "Courier New", monospace;
+      font-size: 10pt;
+    }
+
+    pre {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      line-height: 1.35;
+      margin: 8pt 0 8pt 1.27cm;
+      padding: 8pt;
+      white-space: pre-wrap;
+    }
+
+    table {
+      border-collapse: collapse;
+      line-height: 1.35;
+      margin: 10pt 0;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #333;
+      padding: 6pt;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-weight: bold;
+    }
+
+    figure {
+      break-inside: avoid;
+      margin: 14pt 0;
+      page-break-inside: avoid;
+      text-align: center;
+    }
+
+    figure img {
+      border: 1px solid #555;
+      max-height: 15.8cm;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    figcaption {
+      font-size: 10pt;
+      line-height: 1.4;
+      margin-top: 5pt;
+      text-align: left;
+    }
+
+    .references p {
+      padding-left: 1.27cm;
+      text-indent: -1.27cm;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <img class="logo" src="assets/logo-uasd.jpg" alt="Logo de la Universidad Autónoma de Santo Domingo">
+    <div class="university">Universidad Autónoma de Santo Domingo</div>
+    <div class="subtitle">Primada de América</div>
+
+    <div class="title">
+      Práctica MongoDB<br>
+      Configuración del entorno y fundamentos de trabajo documental
+    </div>
+
+    <div class="cover-info">
+      <p><strong>Asignatura:</strong> Base de Datos II</p>
+      <p><strong>Unidad:</strong> Unidad 1</p>
+      <p><strong>Docente:</strong> Bismark Montero</p>
+      <p><strong>Estudiante:</strong> Marlenis Concepción</p>
+      <p><strong>Matrícula:</strong> 40225495809</p>
+    </div>
+
+    <div class="place-date">
+      <p>Santo Domingo, República Dominicana</p>
+      <p>10 de agosto de 2026</p>
+    </div>
+  </section>
+
+  <main>
+    <h1>Práctica MongoDB</h1>
+
+    <h2>Propósito</h2>
+    <p>Esta práctica tiene como objetivo configurar y validar un entorno local de MongoDB, crear una base de datos documental, insertar documentos, aplicar consultas con filtros y proyecciones, y ejecutar operaciones básicas CRUD sobre una colección académica.</p>
+
+    <h2>Entorno utilizado</h2>
+    <ul>
+      <li>Motor de base de datos: MongoDB Community Server ejecutado en Docker.</li>
+      <li>Interfaz gráfica: MongoDB Compass.</li>
+      <li>Cadena de conexión local: <code>mongodb://127.0.0.1:37017</code>.</li>
+      <li>Contenedor utilizado: <code>mongodb-uasd</code>, basado en la imagen <code>mongo:8.0</code>.</li>
+      <li>Base de datos creada: <code>maestria_nosql</code>.</li>
+      <li>Colección creada: <code>estudiantes</code>.</li>
+    </ul>
+
+    <h2>Estructura documental</h2>
+    <p>La colección <code>estudiantes</code> contiene documentos con campos simples, arreglos y documentos embebidos. Los campos principales son <code>matricula</code>, <code>nombre</code>, <code>edad</code>, <code>programa</code>, <code>activo</code>, <code>competencias</code> y <code>contacto</code>.</p>
+    <p>El campo <code>competencias</code> se modeló como arreglo porque un estudiante puede tener varias habilidades asociadas. El campo <code>contacto</code> se modeló como documento embebido porque sus datos pertenecen directamente al estudiante.</p>
+
+    <h2>Documentos originales insertados</h2>
+    <p>Se insertaron tres documentos iniciales en la colección:</p>
+    <ul>
+      <li>Ana Pérez, matrícula <code>2026-001</code>.</li>
+      <li>Carlos Rodríguez, matrícula <code>2026-002</code>.</li>
+      <li>Laura Martínez, matrícula <code>2026-003</code>.</li>
+    </ul>
+    <p>Cada documento recibió un campo <code>_id</code> único generado por MongoDB.</p>
+
+    <h2>Consultas realizadas</h2>
+    <p>Se ejecutaron filtros para mostrar todos los documentos, estudiantes activos, mayores de 30 años, estudiantes con competencia Python y estudiantes por ciudad. Las consultas principales fueron las siguientes:</p>
+    <pre>{}
+{ "activo": true }
+{ "edad": { "$gt": 30 } }
+{ "competencias": "Python" }
+{ "contacto.ciudad": "Santo Domingo" }</pre>
+    <p>También se aplicó una proyección para mostrar únicamente los campos requeridos:</p>
+    <pre>{ "_id": 0, "nombre": 1, "programa": 1, "competencias": 1 }</pre>
+
+    <h2>Actividad de consolidación</h2>
+    <p>Se insertó un documento adicional con la matrícula <code>40225495809</code>, incluyendo los arreglos <code>competencias</code> y <code>certificaciones</code>, además del documento embebido <code>direccion</code>.</p>
+    <p>Luego se consultaron los documentos con la competencia SQL mediante el filtro:</p>
+    <pre>{ "competencias": "SQL" }</pre>
+    <p>Posteriormente, se actualizó el estado activo del documento original de Laura Martínez:</p>
+    <pre>{ "$set": { "activo": true } }</pre>
+    <p>Finalmente, se eliminó únicamente el documento adicional con la matrícula <code>40225495809</code>, conservando los tres documentos originales de la práctica.</p>
+
+    <h2>Evidencias</h2>
+    <p>La práctica fue ejecutada desde la consola utilizando Docker como entorno de ejecución para MongoDB. El contenedor <code>mongodb-uasd</code> expuso el servicio local mediante la cadena <code>mongodb://127.0.0.1:37017</code>. Las capturas siguientes evidencian la corrida del script, la inserción de documentos, las consultas, la proyección, la actualización y la eliminación del documento adicional.</p>
+
+    <h2>Cumplimiento de lo solicitado</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Requisito de la práctica</th>
+          <th>Cómo se cumplió</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Configurar un entorno local de MongoDB.</td>
+          <td>Se levantó MongoDB con Docker mediante el contenedor <code>mongodb-uasd</code>, usando la imagen <code>mongo:8.0</code> y el puerto local <code>37017</code>.</td>
+        </tr>
+        <tr>
+          <td>Crear la base de datos <code>maestria_nosql</code> y la colección <code>estudiantes</code>.</td>
+          <td>El script <code>run-practica-mongodb-docker.sh</code> ejecutó el archivo de MongoDB y creó la base y colección requeridas.</td>
+        </tr>
+        <tr>
+          <td>Insertar tres documentos originales.</td>
+          <td>Se insertaron los documentos de Ana Pérez, Carlos Rodríguez y Laura Martínez con campos simples, arreglos y documento embebido.</td>
+        </tr>
+        <tr>
+          <td>Ejecutar filtros y proyección.</td>
+          <td>Se ejecutaron consultas para estudiantes activos, mayores de 30 años, competencia Python, ciudad Santo Domingo y una proyección de nombre, programa y competencias.</td>
+        </tr>
+        <tr>
+          <td>Insertar un documento adicional con certificaciones y dirección.</td>
+          <td>Se insertó el documento adicional de Marlenis Concepción con matrícula <code>40225495809</code>, arreglo <code>certificaciones</code> y documento embebido <code>direccion</code>.</td>
+        </tr>
+        <tr>
+          <td>Actualizar un documento original.</td>
+          <td>Se actualizó el campo <code>activo</code> de Laura Martínez de <code>false</code> a <code>true</code>.</td>
+        </tr>
+        <tr>
+          <td>Eliminar únicamente el documento adicional.</td>
+          <td>Se eliminó el documento con matrícula <code>40225495809</code> y la colección conservó los tres documentos originales.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <figure>
+      <img src="assets/evidencias/evidencia-01-inicio-corrida.png" alt="Inicio de la corrida de la práctica MongoDB con Docker">
+      <figcaption><strong>Figura 1.</strong> Inicio de la corrida del script en consola. Se observa el uso de Docker, la conexión <code>mongodb://127.0.0.1:37017</code>, la matrícula y el docente.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/evidencias/evidencia-02-consulta-activos.png" alt="Consulta de estudiantes activos en MongoDB">
+      <figcaption><strong>Figura 2.</strong> Evidencia de documentos insertados y consulta de estudiantes activos.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/evidencias/evidencia-03-mayores-python.png" alt="Consulta de mayores de 30 años y competencia Python">
+      <figcaption><strong>Figura 3.</strong> Evidencia de la consulta de estudiantes mayores de 30 años y del filtro por competencia Python.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/evidencias/evidencia-04-ciudad-proyeccion.png" alt="Filtro por ciudad y proyección de campos">
+      <figcaption><strong>Figura 4.</strong> Evidencia del filtro por ciudad Santo Domingo y de la proyección sugerida.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/evidencias/evidencia-05-documento-adicional.png" alt="Inserción del documento adicional">
+      <figcaption><strong>Figura 5.</strong> Evidencia de la inserción del documento adicional con certificaciones y dirección embebida.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/evidencias/evidencia-06-update.png" alt="Actualización del documento original">
+      <figcaption><strong>Figura 6.</strong> Evidencia de la actualización del estado activo de un documento original.</figcaption>
+    </figure>
+
+    <figure>
+      <img src="assets/evidencias/evidencia-07-delete-final.png" alt="Eliminación del documento adicional y conservación de documentos originales">
+      <figcaption><strong>Figura 7.</strong> Evidencia de la eliminación del documento adicional y conservación de los tres documentos originales.</figcaption>
+    </figure>
+
+    <h2>Preguntas de reflexión</h2>
+
+    <h3>¿Qué diferencias estructurales observa entre un documento de MongoDB y una fila de una tabla relacional?</h3>
+    <p>Una fila de una tabla relacional sigue una estructura fija definida por columnas, tipos de datos y restricciones. En cambio, un documento de MongoDB tiene una estructura flexible y puede incluir campos simples, arreglos y documentos embebidos dentro del mismo registro.</p>
+
+    <h3>¿Qué beneficios y riesgos introduce la flexibilidad de esquema?</h3>
+    <p>La flexibilidad de esquema permite adaptar la base de datos a cambios del negocio sin modificar una estructura rígida. También facilita representar datos complejos en un solo documento. Como riesgo, puede producir inconsistencias si no se mantienen reglas claras de modelado y validación.</p>
+
+    <h3>¿Por qué contacto se modeló como documento embebido y competencias como arreglo?</h3>
+    <p><code>contacto</code> se modeló como documento embebido porque agrupa datos relacionados directamente con un estudiante, como ciudad y correo. <code>competencias</code> se modeló como arreglo porque un estudiante puede tener varias competencias asociadas al mismo campo.</p>
+
+    <h3>¿Qué función cumple <code>_id</code> y qué ocurriría si se intentara insertar un valor duplicado?</h3>
+    <p>El campo <code>_id</code> identifica de forma única cada documento dentro de una colección. Si se intenta insertar un documento con un <code>_id</code> duplicado, MongoDB rechaza la operación porque violaría la unicidad de esa clave.</p>
+
+    <h3>¿Cómo cambiaría el modelo si un estudiante pudiera pertenecer simultáneamente a varios programas?</h3>
+    <p>El campo <code>programa</code> podría convertirse en un arreglo llamado <code>programas</code>, donde se almacenen varios programas asociados al estudiante. Si cada programa tuviera muchos detalles propios, también podría modelarse como una colección separada y relacionarse mediante identificadores.</p>
+
+    <h2>Conclusión</h2>
+    <p>La práctica permitió validar los conceptos iniciales de MongoDB mediante la creación de una base documental, el manejo de documentos con arreglos y objetos embebidos, y la ejecución de operaciones CRUD. También se comprobó la utilidad de los filtros y proyecciones para recuperar información específica dentro de una colección.</p>
+
+    <section class="references page-break">
+      <h1>Referencias</h1>
+      <p>MongoDB. (2026). <em>MongoDB Community Server Download</em>. https://www.mongodb.com/try/download/community</p>
+      <p>MongoDB. (2026). <em>MongoDB Compass Download</em>. https://www.mongodb.com/try/download/compass</p>
+      <p>MongoDB. (2026). <em>MongoDB Shell Download</em>. https://www.mongodb.com/try/download/shell</p>
+      <p>Universidad Autónoma de Santo Domingo. (2026). <em>Guía académica y práctica: Configuración del entorno MongoDB y fundamentos de trabajo documental</em>. Material de apoyo de Base de Datos II.</p>
+    </section>
+  </main>
+</body>
+</html>
