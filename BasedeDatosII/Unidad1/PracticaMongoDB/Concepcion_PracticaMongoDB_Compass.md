@@ -8,7 +8,7 @@ Coleccion: `estudiantes`
 
 En MongoDB Compass:
 
-1. Conectar con `mongodb://127.0.0.1:37017`.
+1. Conectar con `mongodb://127.0.0.1:*******`.
 2. Crear la base de datos `maestria_nosql`.
 3. Crear la coleccion `estudiantes`.
 

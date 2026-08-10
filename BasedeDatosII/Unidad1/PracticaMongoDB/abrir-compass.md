@@ -9,7 +9,7 @@ MongoDB Compass quedo instalado en:
 Cadena de conexion para la practica:
 
 ```text
-mongodb://127.0.0.1:37017
+mongodb://127.0.0.1:*******
 ```
 
 Si Compass no conecta, primero inicia MongoDB con Docker:

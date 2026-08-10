@@ -14,7 +14,7 @@ Esta practica tiene como objetivo configurar y validar un entorno local de Mongo
 
 - Motor de base de datos: MongoDB Community Server ejecutado en Docker.
 - Interfaz grafica: MongoDB Compass.
-- Cadena de conexion local: `mongodb://127.0.0.1:37017`.
+- Cadena de conexion local: `mongodb://127.0.0.1:*******`.
 - Contenedor utilizado: `mongodb-uasd`, basado en la imagen `mongo:8.0`.
 - Base de datos creada: `maestria_nosql`.
 - Coleccion creada: `estudiantes`.
@@ -71,13 +71,13 @@ Finalmente, se elimino unicamente el documento adicional con la identificador ge
 
 ## 7. Evidencias y cumplimiento
 
-La practica fue ejecutada desde la consola utilizando Docker como entorno de ejecucion para MongoDB. El contenedor `mongodb-uasd` expuso el servicio local mediante la cadena `mongodb://127.0.0.1:37017`.
+La practica fue ejecutada desde la consola utilizando Docker como entorno de ejecucion para MongoDB. El contenedor `mongodb-uasd` expuso el servicio local mediante la cadena `mongodb://127.0.0.1:*******`.
 
 ### Lo solicitado y como se cumplio
 
 | Requisito | Como se cumplio |
 |---|---|
-| Configurar un entorno local de MongoDB. | Se levanto MongoDB con Docker usando el contenedor `mongodb-uasd`, la imagen `mongo:8.0` y el puerto local `37017`. |
+| Configurar un entorno local de MongoDB. | Se levanto MongoDB con Docker usando el contenedor `mongodb-uasd`, la imagen `mongo:8.0` y el puerto local `*******`. |
 | Crear la base `maestria_nosql` y la coleccion `estudiantes`. | El script `run-practica-mongodb-docker.sh` ejecuto la practica completa. |
 | Insertar tres documentos originales. | Se insertaron Ana Perez, Carlos Rodriguez y Laura Martinez. |
 | Ejecutar filtros y proyeccion. | Se consultaron activos, mayores de 30 anos, competencia Python, ciudad Santo Domingo y la proyeccion sugerida. |

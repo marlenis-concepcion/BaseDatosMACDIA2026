@@ -9,7 +9,7 @@ Carpeta de trabajo:
 ## Opcion A: MongoDB Compass
 
 1. Abrir MongoDB Compass.
-2. Conectar con `mongodb://127.0.0.1:37017`.
+2. Conectar con `mongodb://127.0.0.1:*******`.
 3. Seguir el archivo `Concepcion_PracticaMongoDB_Compass.md`.
 4. Guardar capturas en la carpeta `evidencias`.
 5. Completar el informe `Concepcion_PracticaMongoDB_Informe.md`.

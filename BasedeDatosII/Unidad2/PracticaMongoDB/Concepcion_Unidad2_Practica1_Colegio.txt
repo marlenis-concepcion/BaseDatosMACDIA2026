@@ -6,7 +6,7 @@ Aplicar operaciones CRUD sobre documentos MongoDB utilizando una estructura con 
 Entorno:
 - MongoDB ejecutado con Docker.
 - Contenedor: mongodb-uasd.
-- Conexion local: mongodb://127.0.0.1:37017.
+- Conexion local: mongodb://127.0.0.1:*******.
 - Base de datos: colegio.
 - Coleccion: estudiantes.
 

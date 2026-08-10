@@ -18,7 +18,7 @@ echo " Practica MongoDB - Base de Datos II"
 echo " Estudiante: Marlenis Concepcion"
 echo " Identificador: EST-ADICIONAL"
 echo " Docente: Bismark Montero"
-echo " Conexion: mongodb://127.0.0.1:37017"
+echo " Conexion: mongodb://127.0.0.1:*******"
 echo "============================================================"
 echo
 
@@ -28,7 +28,7 @@ docker exec "$CONTAINER_NAME" mongosh --quiet "$CONTAINER_SCRIPT"
 echo
 echo "============================================================"
 echo " Practica ejecutada. Ya puedes tomar captura de esta consola."
-echo " En Compass conecta con: mongodb://127.0.0.1:37017"
+echo " En Compass conecta con: mongodb://127.0.0.1:*******"
 echo " Base de datos: maestria_nosql"
 echo " Coleccion: estudiantes"
 echo "============================================================"
