@@ -1,0 +1,77 @@
+[
+  {
+    "_id": "EMP-001",
+    "nombre": "Ana Perez",
+    "edad": 29,
+    "departamento": "Tecnologia",
+    "cargo": "Analista de Datos",
+    "salario": 72000,
+    "activo": true,
+    "fechaIngreso": "2023-02-15",
+    "habilidades": ["SQL", "MongoDB", "Python"],
+    "direccion": {
+      "ciudad": "Santo Domingo",
+      "sector": "Gazcue"
+    }
+  },
+  {
+    "_id": "EMP-002",
+    "nombre": "Carlos Rodriguez",
+    "edad": 35,
+    "departamento": "Finanzas",
+    "cargo": "Contador",
+    "salario": 68000,
+    "activo": true,
+    "fechaIngreso": "2021-07-10",
+    "habilidades": ["Excel", "Auditoria", "Power BI"],
+    "direccion": {
+      "ciudad": "Santiago",
+      "sector": "Los Jardines"
+    }
+  },
+  {
+    "_id": "EMP-003",
+    "nombre": "Laura Martinez",
+    "edad": 41,
+    "departamento": "Recursos Humanos",
+    "cargo": "Coordinadora",
+    "salario": 61000,
+    "activo": false,
+    "fechaIngreso": "2020-11-03",
+    "habilidades": ["Reclutamiento", "Nomina", "Comunicacion"],
+    "direccion": {
+      "ciudad": "La Vega",
+      "sector": "Centro"
+    }
+  },
+  {
+    "_id": "EMP-004",
+    "nombre": "Miguel Santos",
+    "edad": 26,
+    "departamento": "Tecnologia",
+    "cargo": "Desarrollador Junior",
+    "salario": 52000,
+    "activo": true,
+    "fechaIngreso": "2024-01-20",
+    "habilidades": ["JavaScript", "Node.js", "MongoDB"],
+    "direccion": {
+      "ciudad": "San Cristobal",
+      "sector": "Madre Vieja"
+    }
+  },
+  {
+    "_id": "EMP-005",
+    "nombre": "Rosa Jimenez",
+    "edad": 32,
+    "departamento": "Ventas",
+    "cargo": "Supervisora",
+    "salario": 59000,
+    "activo": true,
+    "fechaIngreso": "2022-05-18",
+    "habilidades": ["Negociacion", "CRM", "Servicio al Cliente"],
+    "direccion": {
+      "ciudad": "Santo Domingo",
+      "sector": "Naco"
+    }
+  }
+]

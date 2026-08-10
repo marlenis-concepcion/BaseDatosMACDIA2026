@@ -1,0 +1,35 @@
+Practica No. 2 - Empleado
+
+Objetivo:
+Aplicar tecnicas de importacion e insercion masiva de documentos en MongoDB, comprendiendo el comportamiento de _id, insertMany() y las inserciones ordenadas.
+
+Entorno:
+- MongoDB ejecutado con Docker.
+- Contenedor: mongodb-uasd.
+- Conexion local: mongodb://127.0.0.1:*******.
+- Base de datos: empresa.
+- Coleccion: empleados.
+
+Archivos principales:
+- dataset/empleados.json: dataset importado con mongoimport.
+- Concepcion_Unidad3_Practica2_Empleado.js: sentencias de insercion, conflicto de _id y consultas con operadores.
+- run-unidad3-practica2-docker.sh: script de ejecucion con Docker.
+
+Comando para ejecutar:
+
+docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad3/PracticaMongoDB
+./run-unidad3-practica2-docker.sh
+
+Operaciones incluidas:
+1. Importacion del dataset con mongoimport.
+2. insertOne() para insertar un empleado adicional.
+3. insertMany() con ordered:true para provocar conflicto de _id.
+4. Captura del error por _id duplicado.
+5. insertMany() con ordered:false para demostrar que MongoDB continua con documentos validos.
+6. Consultas con operadores de comparacion: $gt, $lte, $in y $ne.
+7. Consultas con operadores logicos: $and, $or, $nor y $not.
+8. Evidencia del contenido final de la coleccion.
+
+Resultado esperado:
+La coleccion conserva los empleados importados y los documentos validos insertados. El conflicto de _id queda registrado como evidencia de que MongoDB no permite claves _id duplicadas.

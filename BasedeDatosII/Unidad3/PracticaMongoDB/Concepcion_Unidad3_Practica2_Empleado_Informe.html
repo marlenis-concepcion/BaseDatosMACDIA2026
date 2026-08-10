@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Concepcion_Unidad3_Practica2_Empleado</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 2.54cm;
+      @top-right {
+        content: counter(page);
+        font-family: "Times New Roman", serif;
+        font-size: 12pt;
+      }
+    }
+
+    body {
+      color: #111;
+      font-family: "Times New Roman", serif;
+      font-size: 12pt;
+      line-height: 2;
+      margin: 0;
+    }
+
+    .cover {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      min-height: 21.5cm;
+      page-break-after: always;
+      text-align: center;
+    }
+
+    .logo {
+      height: 3.8cm;
+      margin-top: 0.2cm;
+      object-fit: contain;
+      width: 3.8cm;
+    }
+
+    .university {
+      font-size: 14pt;
+      font-weight: bold;
+      margin-top: 0.35cm;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 12pt;
+      margin-top: 0.1cm;
+    }
+
+    .title {
+      font-size: 16pt;
+      font-weight: bold;
+      line-height: 1.5;
+      margin-top: 3cm;
+      text-transform: uppercase;
+    }
+
+    .cover-info {
+      line-height: 1.8;
+      margin-top: 3cm;
+      width: 100%;
+    }
+
+    .cover p,
+    li p {
+      text-indent: 0;
+    }
+
+    .place-date {
+      margin-top: auto;
+    }
+
+    h1 {
+      font-size: 12pt;
+      font-weight: bold;
+      line-height: 2;
+      margin: 0 0 12pt;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 12pt;
+      font-weight: bold;
+      line-height: 2;
+      margin: 12pt 0 0;
+      text-align: left;
+    }
+
+    p {
+      margin: 0;
+      text-indent: 1.27cm;
+    }
+
+    ul,
+    ol {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+    code,
+    pre {
+      font-family: "Courier New", monospace;
+      font-size: 8.5pt;
+    }
+
+    pre {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      line-height: 1.25;
+      margin: 8pt 0;
+      padding: 8pt;
+      white-space: pre-wrap;
+    }
+
+    table {
+      border-collapse: collapse;
+      line-height: 1.35;
+      margin: 10pt 0;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #333;
+      padding: 6pt;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    figure {
+      break-inside: avoid;
+      margin: 14pt 0;
+      page-break-inside: avoid;
+      text-align: center;
+    }
+
+    figure img {
+      border: 1px solid #555;
+      max-height: 15.8cm;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    figcaption {
+      font-size: 10pt;
+      line-height: 1.4;
+      margin-top: 5pt;
+      text-align: left;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <img class="logo" src="../../Unidad1/PracticaMongoDB/assets/logo-uasd.jpg" alt="Logo de la Universidad Autonoma de Santo Domingo">
+    <div class="university">Universidad Autónoma de Santo Domingo</div>
+    <div class="subtitle">Primada de América</div>
+
+    <div class="title">
+      Unidad 3<br>
+      Práctica N.º 2 - Empleado
+    </div>
+
+    <div class="cover-info">
+      <p><strong>Asignatura:</strong> Base de Datos II</p>
+      <p><strong>Docente:</strong> Bismark Montero</p>
+      <p><strong>Estudiante:</strong> Marlenis Concepción</p>
+      <p><strong>Tema:</strong> Inserción masiva, <code>_id</code>, <code>insertMany()</code> y operadores</p>
+    </div>
+
+    <div class="place-date">
+      <p>Santo Domingo, República Dominicana</p>
+      <p>10 de agosto de 2026</p>
+    </div>
+  </section>
+
+  <main>
+    <h1>Práctica N.º 2 - Empleado</h1>
+
+    <h2>Objetivo</h2>
+    <p>Aplicar técnicas de importación e inserción masiva de documentos en MongoDB, comprendiendo el comportamiento de <code>_id</code>, <code>insertMany()</code> y las inserciones ordenadas.</p>
+
+    <h2>Entorno utilizado</h2>
+    <ul>
+      <li>MongoDB ejecutado con Docker.</li>
+      <li>Contenedor: <code>mongodb-uasd</code>.</li>
+      <li>Imagen: <code>mongo:8.0</code>.</li>
+      <li>Conexión local: <code>mongodb://127.0.0.1:*******</code>.</li>
+      <li>Base de datos: <code>empresa</code>.</li>
+      <li>Colección: <code>empleados</code>.</li>
+    </ul>
+
+    <h2>Comandos de ejecución</h2>
+    <pre>docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad3/PracticaMongoDB
+./run-unidad3-practica2-docker.sh</pre>
+
+    <h2>Lo solicitado y cómo se cumplió</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Requisito</th>
+          <th>Cumplimiento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Script de importación.</td>
+          <td>Se creó <code>run-unidad3-practica2-docker.sh</code>, que importa <code>dataset/empleados.json</code> mediante <code>mongoimport</code>.</td>
+        </tr>
+        <tr>
+          <td>Sentencias de inserción.</td>
+          <td>Se incluyeron <code>insertOne()</code> e <code>insertMany()</code> en <code>Concepcion_Unidad3_Practica2_Empleado.js</code>.</td>
+        </tr>
+        <tr>
+          <td>Evidencia del contenido final.</td>
+          <td>El script imprime el conteo final y los documentos de la colección ordenados por <code>_id</code>.</td>
+        </tr>
+        <tr>
+          <td>Captura del conflicto de <code>_id</code>.</td>
+          <td>Se provoca un duplicado de <code>_id</code> con <code>ordered:true</code> y se captura el error reportado por MongoDB.</td>
+        </tr>
+        <tr>
+          <td>Operadores de comparación y lógicos.</td>
+          <td>Se usaron <code>$gt</code>, <code>$lte</code>, <code>$in</code>, <code>$ne</code>, <code>$and</code>, <code>$or</code>, <code>$nor</code> y <code>$not</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Resumen de operaciones realizadas</h2>
+    <ul>
+      <li><strong>Importación:</strong> carga inicial de empleados con <code>mongoimport</code>.</li>
+      <li><strong>Inserción individual:</strong> uso de <code>insertOne()</code> para agregar un empleado adicional.</li>
+      <li><strong>Inserción masiva ordenada:</strong> uso de <code>insertMany()</code> con <code>ordered:true</code> para demostrar que la operación se detiene ante un <code>_id</code> duplicado.</li>
+      <li><strong>Inserción masiva no ordenada:</strong> uso de <code>insertMany()</code> con <code>ordered:false</code> para demostrar que MongoDB continúa con documentos válidos.</li>
+      <li><strong>Consultas:</strong> filtros con operadores de comparación y operadores lógicos.</li>
+    </ul>
+
+    <h2 class="page-break">Scripts utilizados</h2>
+    <p>Los siguientes archivos fueron usados como evidencia de la solución. Cada uno cumple una función específica dentro de la práctica.</p>
+
+    <h2>Archivo: run-unidad3-practica2-docker.sh</h2>
+    <p>Este script automatiza la ejecución. Verifica que el contenedor de MongoDB esté activo, copia el dataset y el script JavaScript al contenedor, importa los empleados con <code>mongoimport</code> y luego ejecuta las sentencias con <code>mongosh</code>.</p>
+    <pre>#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;${BASH_SOURCE[0]}&quot;)&quot; &amp;&amp; pwd)&quot;
+DATASET_FILE=&quot;$SCRIPT_DIR/dataset/empleados.json&quot;
+SCRIPT_FILE=&quot;$SCRIPT_DIR/Concepcion_Unidad3_Practica2_Empleado.js&quot;
+CONTAINER_NAME=&quot;mongodb-uasd&quot;
+CONTAINER_DATASET=&quot;/tmp/unidad3-empleados.json&quot;
+CONTAINER_SCRIPT=&quot;/tmp/unidad3-practica2-empleado.js&quot;
+
+if ! docker ps --format &#x27;{{.Names}}&#x27; | grep -qx &quot;$CONTAINER_NAME&quot;; then
+  echo &quot;MongoDB Docker no esta corriendo.&quot;
+  echo &quot;Primero ejecuta:&quot;
+  echo &quot;  docker start $CONTAINER_NAME&quot;
+  exit 1
+fi
+
+echo &quot;============================================================&quot;
+echo &quot; Unidad 3 - Practica No. 2 - Empleado&quot;
+echo &quot; Estudiante: Marlenis Concepcion&quot;
+echo &quot; Docente: Bismark Montero&quot;
+echo &quot; Conexion: mongodb://127.0.0.1:*******&quot;
+echo &quot;============================================================&quot;
+echo
+
+docker cp &quot;$DATASET_FILE&quot; &quot;$CONTAINER_NAME:$CONTAINER_DATASET&quot;
+docker cp &quot;$SCRIPT_FILE&quot; &quot;$CONTAINER_NAME:$CONTAINER_SCRIPT&quot;
+
+echo &quot;Importando dataset con mongoimport...&quot;
+docker exec &quot;$CONTAINER_NAME&quot; mongoimport \
+  --db empresa \
+  --collection empleados \
+  --drop \
+  --jsonArray \
+  --file &quot;$CONTAINER_DATASET&quot;
+
+echo
+echo &quot;Ejecutando sentencias de insercion y consultas...&quot;
+docker exec &quot;$CONTAINER_NAME&quot; mongosh --quiet &quot;$CONTAINER_SCRIPT&quot;
+
+echo
+echo &quot;============================================================&quot;
+echo &quot; Practica ejecutada. Ya puedes tomar captura de esta consola.&quot;
+echo &quot; En Compass conecta con: mongodb://127.0.0.1:*******&quot;
+echo &quot; Base de datos: empresa&quot;
+echo &quot; Coleccion: empleados&quot;
+echo &quot;============================================================&quot;
+</pre>
+
+    <h2>Archivo: Concepcion_Unidad3_Practica2_Empleado.js</h2>
+    <p>Este script contiene las sentencias de inserción y consulta. Primero valida el dataset importado; luego ejecuta <code>insertOne()</code>, <code>insertMany()</code> ordenado con conflicto de <code>_id</code>, <code>insertMany()</code> no ordenado y consultas con operadores.</p>
+    <pre>// Universidad Autonoma de Santo Domingo
+// Base de Datos II - Unidad 3
+// Practica No. 2 - Empleado
+// Objetivo: aplicar importacion, insercion masiva, _id,
+// insertMany() e inserciones ordenadas en MongoDB.
+// Estudiante: Marlenis Concepcion
+// Docente: Bismark Montero
+
+use(&quot;empresa&quot;);
+
+print(&quot;\n============================================================&quot;);
+print(&quot;Practica No. 2 - Empleado&quot;);
+print(&quot;Base de datos: empresa&quot;);
+print(&quot;Coleccion: empleados&quot;);
+print(&quot;============================================================\n&quot;);
+
+print(&quot;0. Validacion del dataset importado con mongoimport&quot;);
+print(&quot;Total luego de importar dataset:&quot;);
+printjson(db.empleados.countDocuments());
+printjson(db.empleados.find({}, { _id: 1, nombre: 1, departamento: 1, salario: 1, activo: 1 }).toArray());
+
+print(&quot;\n1. insertOne(): insertar un empleado adicional&quot;);
+db.empleados.insertOne({
+  _id: &quot;EMP-006&quot;,
+  nombre: &quot;Pedro Castillo&quot;,
+  edad: 38,
+  departamento: &quot;Operaciones&quot;,
+  cargo: &quot;Encargado de Logistica&quot;,
+  salario: 64000,
+  activo: true,
+  fechaIngreso: &quot;2022-09-12&quot;,
+  habilidades: [&quot;Inventario&quot;, &quot;Logistica&quot;, &quot;Excel&quot;],
+  direccion: {
+    ciudad: &quot;Santo Domingo&quot;,
+    sector: &quot;Villa Consuelo&quot;
+  }
+});
+printjson(db.empleados.find({ _id: &quot;EMP-006&quot; }).toArray());
+
+print(&quot;\n2. insertMany() ordenado con conflicto de _id&quot;);
+print(&quot;El documento EMP-007 se inserta antes del conflicto. EMP-008 no se inserta porque ordered:true detiene la operacion.&quot;);
+try {
+  db.empleados.insertMany(
+    [
+      {
+        _id: &quot;EMP-007&quot;,
+        nombre: &quot;Sofia Reyes&quot;,
+        edad: 28,
+        departamento: &quot;Marketing&quot;,
+        cargo: &quot;Analista de Mercado&quot;,
+        salario: 57000,
+        activo: true,
+        fechaIngreso: &quot;2023-08-22&quot;,
+        habilidades: [&quot;SEO&quot;, &quot;Analitica&quot;, &quot;CRM&quot;],
+        direccion: { ciudad: &quot;Santo Domingo&quot;, sector: &quot;Piantini&quot; }
+      },
+      {
+        _id: &quot;EMP-003&quot;,
+        nombre: &quot;Documento Duplicado&quot;,
+        edad: 45,
+        departamento: &quot;Prueba&quot;,
+        cargo: &quot;Duplicado&quot;,
+        salario: 1,
+        activo: false,
+        fechaIngreso: &quot;2024-01-01&quot;,
+        habilidades: [&quot;Duplicado&quot;],
+        direccion: { ciudad: &quot;Prueba&quot;, sector: &quot;Prueba&quot; }
+      },
+      {
+        _id: &quot;EMP-008&quot;,
+        nombre: &quot;Daniel Pina&quot;,
+        edad: 31,
+        departamento: &quot;Tecnologia&quot;,
+        cargo: &quot;Administrador de Sistemas&quot;,
+        salario: 70000,
+        activo: true,
+        fechaIngreso: &quot;2021-12-01&quot;,
+        habilidades: [&quot;Linux&quot;, &quot;Redes&quot;, &quot;MongoDB&quot;],
+        direccion: { ciudad: &quot;Santiago&quot;, sector: &quot;Centro&quot; }
+      }
+    ],
+    { ordered: true }
+  );
+} catch (error) {
+  print(&quot;Conflicto capturado por _id duplicado en insertMany ordenado.&quot;);
+  printjson({
+    name: error.name,
+    code: error.code,
+    message: error.message
+  });
+}
+print(&quot;Estado despues del insertMany ordenado:&quot;);
+printjson(db.empleados.find({ _id: { $in: [&quot;EMP-007&quot;, &quot;EMP-008&quot;] } }, { _id: 1, nombre: 1 }).toArray());
+
+print(&quot;\n3. insertMany() no ordenado con conflicto de _id&quot;);
+print(&quot;Con ordered:false MongoDB reporta el duplicado, pero continua insertando los documentos validos.&quot;);
+try {
+  db.empleados.insertMany(
+    [
+      {
+        _id: &quot;EMP-009&quot;,
+        nombre: &quot;Patricia Gomez&quot;,
+        edad: 30,
+        departamento: &quot;Finanzas&quot;,
+        cargo: &quot;Analista Financiera&quot;,
+        salario: 66000,
+        activo: true,
+        fechaIngreso: &quot;2022-03-15&quot;,
+        habilidades: [&quot;Presupuesto&quot;, &quot;Excel&quot;, &quot;Power BI&quot;],
+        direccion: { ciudad: &quot;La Vega&quot;, sector: &quot;Centro&quot; }
+      },
+      {
+        _id: &quot;EMP-002&quot;,
+        nombre: &quot;Otro Duplicado&quot;,
+        edad: 50,
+        departamento: &quot;Prueba&quot;,
+        cargo: &quot;Duplicado&quot;,
+        salario: 1,
+        activo: false,
+        fechaIngreso: &quot;2024-01-01&quot;,
+        habilidades: [&quot;Duplicado&quot;],
+        direccion: { ciudad: &quot;Prueba&quot;, sector: &quot;Prueba&quot; }
+      },
+      {
+        _id: &quot;EMP-010&quot;,
+        nombre: &quot;Jose Medina&quot;,
+        edad: 44,
+        departamento: &quot;Gerencia&quot;,
+        cargo: &quot;Gerente General&quot;,
+        salario: 120000,
+        activo: true,
+        fechaIngreso: &quot;2019-04-08&quot;,
+        habilidades: [&quot;Liderazgo&quot;, &quot;Planificacion&quot;, &quot;Finanzas&quot;],
+        direccion: { ciudad: &quot;Santo Domingo&quot;, sector: &quot;Bella Vista&quot; }
+      }
+    ],
+    { ordered: false }
+  );
+} catch (error) {
+  print(&quot;Conflicto capturado por _id duplicado en insertMany no ordenado.&quot;);
+  printjson({
+    name: error.name,
+    code: error.code,
+    message: error.message
+  });
+}
+print(&quot;Estado despues del insertMany no ordenado:&quot;);
+printjson(db.empleados.find({ _id: { $in: [&quot;EMP-009&quot;, &quot;EMP-010&quot;] } }, { _id: 1, nombre: 1 }).toArray());
+
+print(&quot;\n4. Operadores de comparacion&quot;);
+print(&quot;Salario mayor que 65000 ($gt):&quot;);
+printjson(db.empleados.find({ salario: { $gt: 65000 } }, { _id: 1, nombre: 1, salario: 1 }).toArray());
+
+print(&quot;Edad menor o igual a 30 ($lte):&quot;);
+printjson(db.empleados.find({ edad: { $lte: 30 } }, { _id: 1, nombre: 1, edad: 1 }).toArray());
+
+print(&quot;Departamentos Tecnologia o Finanzas ($in):&quot;);
+printjson(db.empleados.find({ departamento: { $in: [&quot;Tecnologia&quot;, &quot;Finanzas&quot;] } }, { _id: 1, nombre: 1, departamento: 1 }).toArray());
+
+print(&quot;Empleados cuyo departamento no es Tecnologia ($ne):&quot;);
+printjson(db.empleados.find({ departamento: { $ne: &quot;Tecnologia&quot; } }, { _id: 1, nombre: 1, departamento: 1 }).toArray());
+
+print(&quot;\n5. Operadores logicos&quot;);
+print(&quot;$and: activos con salario mayor o igual a 70000&quot;);
+printjson(db.empleados.find({ $and: [{ activo: true }, { salario: { $gte: 70000 } }] }, { _id: 1, nombre: 1, salario: 1, activo: 1 }).toArray());
+
+print(&quot;$or: empleados de Ventas o Recursos Humanos&quot;);
+printjson(db.empleados.find({ $or: [{ departamento: &quot;Ventas&quot; }, { departamento: &quot;Recursos Humanos&quot; }] }, { _id: 1, nombre: 1, departamento: 1 }).toArray());
+
+print(&quot;$nor: no activos y no Tecnologia&quot;);
+printjson(db.empleados.find({ $nor: [{ activo: true }, { departamento: &quot;Tecnologia&quot; }] }, { _id: 1, nombre: 1, departamento: 1, activo: 1 }).toArray());
+
+print(&quot;$not: salarios que no son mayores que 90000&quot;);
+printjson(db.empleados.find({ salario: { $not: { $gt: 90000 } } }, { _id: 1, nombre: 1, salario: 1 }).toArray());
+
+print(&quot;\n6. Evidencia del contenido final de la coleccion&quot;);
+print(&quot;Total final:&quot;);
+printjson(db.empleados.countDocuments());
+printjson(db.empleados.find({}, { _id: 1, nombre: 1, departamento: 1, salario: 1, activo: 1 }).sort({ _id: 1 }).toArray());
+
+print(&quot;\nPractica finalizada. Se evidencio mongoimport, insertOne, insertMany, ordered:true, ordered:false y consultas con operadores.&quot;);
+</pre>
+
+    <h2>Archivo: dataset/empleados.json</h2>
+    <p>Este archivo contiene los documentos iniciales que se importan con <code>mongoimport</code>. Cada empleado usa un <code>_id</code> definido para poder demostrar el comportamiento ante duplicados.</p>
+    <pre>[
+  {
+    &quot;_id&quot;: &quot;EMP-001&quot;,
+    &quot;nombre&quot;: &quot;Ana Perez&quot;,
+    &quot;edad&quot;: 29,
+    &quot;departamento&quot;: &quot;Tecnologia&quot;,
+    &quot;cargo&quot;: &quot;Analista de Datos&quot;,
+    &quot;salario&quot;: 72000,
+    &quot;activo&quot;: true,
+    &quot;fechaIngreso&quot;: &quot;2023-02-15&quot;,
+    &quot;habilidades&quot;: [&quot;SQL&quot;, &quot;MongoDB&quot;, &quot;Python&quot;],
+    &quot;direccion&quot;: {
+      &quot;ciudad&quot;: &quot;Santo Domingo&quot;,
+      &quot;sector&quot;: &quot;Gazcue&quot;
+    }
+  },
+  {
+    &quot;_id&quot;: &quot;EMP-002&quot;,
+    &quot;nombre&quot;: &quot;Carlos Rodriguez&quot;,
+    &quot;edad&quot;: 35,
+    &quot;departamento&quot;: &quot;Finanzas&quot;,
+    &quot;cargo&quot;: &quot;Contador&quot;,
+    &quot;salario&quot;: 68000,
+    &quot;activo&quot;: true,
+    &quot;fechaIngreso&quot;: &quot;2021-07-10&quot;,
+    &quot;habilidades&quot;: [&quot;Excel&quot;, &quot;Auditoria&quot;, &quot;Power BI&quot;],
+    &quot;direccion&quot;: {
+      &quot;ciudad&quot;: &quot;Santiago&quot;,
+      &quot;sector&quot;: &quot;Los Jardines&quot;
+    }
+  },
+  {
+    &quot;_id&quot;: &quot;EMP-003&quot;,
+    &quot;nombre&quot;: &quot;Laura Martinez&quot;,
+    &quot;edad&quot;: 41,
+    &quot;departamento&quot;: &quot;Recursos Humanos&quot;,
+    &quot;cargo&quot;: &quot;Coordinadora&quot;,
+    &quot;salario&quot;: 61000,
+    &quot;activo&quot;: false,
+    &quot;fechaIngreso&quot;: &quot;2020-11-03&quot;,
+    &quot;habilidades&quot;: [&quot;Reclutamiento&quot;, &quot;Nomina&quot;, &quot;Comunicacion&quot;],
+    &quot;direccion&quot;: {
+      &quot;ciudad&quot;: &quot;La Vega&quot;,
+      &quot;sector&quot;: &quot;Centro&quot;
+    }
+  },
+  {
+    &quot;_id&quot;: &quot;EMP-004&quot;,
+    &quot;nombre&quot;: &quot;Miguel Santos&quot;,
+    &quot;edad&quot;: 26,
+    &quot;departamento&quot;: &quot;Tecnologia&quot;,
+    &quot;cargo&quot;: &quot;Desarrollador Junior&quot;,
+    &quot;salario&quot;: 52000,
+    &quot;activo&quot;: true,
+    &quot;fechaIngreso&quot;: &quot;2024-01-20&quot;,
+    &quot;habilidades&quot;: [&quot;JavaScript&quot;, &quot;Node.js&quot;, &quot;MongoDB&quot;],
+    &quot;direccion&quot;: {
+      &quot;ciudad&quot;: &quot;San Cristobal&quot;,
+      &quot;sector&quot;: &quot;Madre Vieja&quot;
+    }
+  },
+  {
+    &quot;_id&quot;: &quot;EMP-005&quot;,
+    &quot;nombre&quot;: &quot;Rosa Jimenez&quot;,
+    &quot;edad&quot;: 32,
+    &quot;departamento&quot;: &quot;Ventas&quot;,
+    &quot;cargo&quot;: &quot;Supervisora&quot;,
+    &quot;salario&quot;: 59000,
+    &quot;activo&quot;: true,
+    &quot;fechaIngreso&quot;: &quot;2022-05-18&quot;,
+    &quot;habilidades&quot;: [&quot;Negociacion&quot;, &quot;CRM&quot;, &quot;Servicio al Cliente&quot;],
+    &quot;direccion&quot;: {
+      &quot;ciudad&quot;: &quot;Santo Domingo&quot;,
+      &quot;sector&quot;: &quot;Naco&quot;
+    }
+  }
+]
+</pre>
+
+    <h2>Archivo: Concepcion_Unidad3_Practica2_Empleado.txt</h2>
+    <p>Este archivo resume el objetivo, el entorno, los comandos de ejecución y las operaciones incluidas para entregar una guía rápida junto con el script.</p>
+    <pre>Practica No. 2 - Empleado
+
+Objetivo:
+Aplicar tecnicas de importacion e insercion masiva de documentos en MongoDB, comprendiendo el comportamiento de _id, insertMany() y las inserciones ordenadas.
+
+Entorno:
+- MongoDB ejecutado con Docker.
+- Contenedor: mongodb-uasd.
+- Conexion local: mongodb://127.0.0.1:*******.
+- Base de datos: empresa.
+- Coleccion: empleados.
+
+Archivos principales:
+- dataset/empleados.json: dataset importado con mongoimport.
+- Concepcion_Unidad3_Practica2_Empleado.js: sentencias de insercion, conflicto de _id y consultas con operadores.
+- run-unidad3-practica2-docker.sh: script de ejecucion con Docker.
+
+Comando para ejecutar:
+
+docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad3/PracticaMongoDB
+./run-unidad3-practica2-docker.sh
+
+Operaciones incluidas:
+1. Importacion del dataset con mongoimport.
+2. insertOne() para insertar un empleado adicional.
+3. insertMany() con ordered:true para provocar conflicto de _id.
+4. Captura del error por _id duplicado.
+5. insertMany() con ordered:false para demostrar que MongoDB continua con documentos validos.
+6. Consultas con operadores de comparacion: $gt, $lte, $in y $ne.
+7. Consultas con operadores logicos: $and, $or, $nor y $not.
+8. Evidencia del contenido final de la coleccion.
+
+Resultado esperado:
+La coleccion conserva los empleados importados y los documentos validos insertados. El conflicto de _id queda registrado como evidencia de que MongoDB no permite claves _id duplicadas.
+</pre>
+
+    <h2 class="page-break">Evidencias de la corrida</h2>
+    <p>Las capturas de consola deben mostrar: la importación con <code>mongoimport</code>, el conflicto de <code>_id</code>, el comportamiento de <code>ordered:true</code>, el comportamiento de <code>ordered:false</code>, las consultas con operadores y el contenido final de la colección.</p>
+
+    <h2>Conclusión</h2>
+    <p>La práctica permitió demostrar la carga inicial de datos con <code>mongoimport</code>, el uso de inserciones individuales y masivas, y el efecto que produce un <code>_id</code> duplicado en inserciones ordenadas y no ordenadas. También se aplicaron operadores de comparación y lógicos para filtrar documentos de empleados en MongoDB.</p>
+  </main>
+</body>
+</html>
