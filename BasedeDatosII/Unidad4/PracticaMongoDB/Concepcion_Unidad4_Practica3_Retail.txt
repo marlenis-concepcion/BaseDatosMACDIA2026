@@ -1,0 +1,27 @@
+Practica No. 3 - Retail
+
+Objetivo:
+Construir consultas MongoDB sobre estructuras JSON complejas, combinando filtros, documentos embebidos, arrays y operadores de comparacion y logicos.
+
+Entorno:
+- MongoDB ejecutado con Docker.
+- Contenedor: mongodb-uasd.
+- Conexion local: mongodb://127.0.0.1:*******.
+- Base de datos: retail.
+- Coleccion: ventas.
+
+Comando para ejecutar:
+
+docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad4/PracticaMongoDB
+./run-unidad4-practica3-docker.sh
+
+Cinco consultas incluidas:
+1. $exists y $type: validar existencia y tipo del documento envio y del total.
+2. $regex: buscar nombres de clientes que comienzan con Ana, Carlos o Rosa.
+3. $elemMatch: buscar ventas con producto de tecnologia y precio mayor o igual a 14000.
+4. $all y $size: buscar ventas con pagos especificos y cantidad exacta de cupones.
+5. $expr, $mod y $and: comparar campos y expresiones, validar total par y combinar condiciones.
+
+Resultado esperado:
+Cada consulta imprime el resultado obtenido y permite evidenciar el operador utilizado sobre documentos anidados y arrays.

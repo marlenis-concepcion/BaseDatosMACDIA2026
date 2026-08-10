@@ -1,0 +1,143 @@
+[
+  {
+    "_id": "VEN-001",
+    "fecha": "2026-08-01",
+    "tienda": "Santo Domingo Centro",
+    "canal": "online",
+    "total": 18500,
+    "estado": "pagada",
+    "cliente": {
+      "nombre": "Ana Perez",
+      "tipo": "premium",
+      "ciudad": "Santo Domingo",
+      "edad": 29
+    },
+    "envio": {
+      "metodo": "delivery",
+      "ciudad": "Santo Domingo",
+      "entregado": true
+    },
+    "productos": [
+      { "sku": "TEC-001", "nombre": "Laptop Lenovo", "categoria": "tecnologia", "cantidad": 1, "precio": 14500 },
+      { "sku": "ACC-010", "nombre": "Mouse Inalambrico", "categoria": "accesorios", "cantidad": 2, "precio": 950 }
+    ],
+    "pagos": ["tarjeta", "puntos"],
+    "cupones": ["BACK2SCHOOL", "PREMIUM"]
+  },
+  {
+    "_id": "VEN-002",
+    "fecha": "2026-08-02",
+    "tienda": "Santiago Norte",
+    "canal": "fisico",
+    "total": 6400,
+    "estado": "pagada",
+    "cliente": {
+      "nombre": "Carlos Rodriguez",
+      "tipo": "regular",
+      "ciudad": "Santiago",
+      "edad": 35
+    },
+    "envio": {
+      "metodo": "retiro",
+      "ciudad": "Santiago",
+      "entregado": true
+    },
+    "productos": [
+      { "sku": "HOG-100", "nombre": "Licuadora Oster", "categoria": "hogar", "cantidad": 1, "precio": 4200 },
+      { "sku": "HOG-101", "nombre": "Set de Vasos", "categoria": "hogar", "cantidad": 2, "precio": 1100 }
+    ],
+    "pagos": ["efectivo"]
+  },
+  {
+    "_id": "VEN-003",
+    "fecha": "2026-08-03",
+    "tienda": "La Vega Plaza",
+    "canal": "online",
+    "total": 21999,
+    "estado": "pendiente",
+    "cliente": {
+      "nombre": "Laura Martinez",
+      "tipo": "premium",
+      "ciudad": "La Vega",
+      "edad": 41
+    },
+    "envio": {
+      "metodo": "delivery",
+      "ciudad": "La Vega",
+      "entregado": false
+    },
+    "productos": [
+      { "sku": "CEL-900", "nombre": "Samsung Galaxy", "categoria": "tecnologia", "cantidad": 1, "precio": 21999 }
+    ],
+    "pagos": ["tarjeta"],
+    "cupones": []
+  },
+  {
+    "_id": "VEN-004",
+    "fecha": "2026-08-04",
+    "tienda": "Santo Domingo Este",
+    "canal": "fisico",
+    "total": 3300,
+    "estado": "cancelada",
+    "cliente": {
+      "nombre": "Miguel Santos",
+      "tipo": "regular",
+      "ciudad": "San Cristobal",
+      "edad": 26
+    },
+    "productos": [
+      { "sku": "DEP-111", "nombre": "Balon de Baloncesto", "categoria": "deportes", "cantidad": 1, "precio": 1800 },
+      { "sku": "DEP-112", "nombre": "Botella Deportiva", "categoria": "deportes", "cantidad": 1, "precio": 1500 }
+    ],
+    "pagos": ["tarjeta"]
+  },
+  {
+    "_id": "VEN-005",
+    "fecha": "2026-08-05",
+    "tienda": "Santo Domingo Centro",
+    "canal": "online",
+    "total": 12800,
+    "estado": "pagada",
+    "cliente": {
+      "nombre": "Rosa Jimenez",
+      "tipo": "premium",
+      "ciudad": "Santo Domingo",
+      "edad": 32
+    },
+    "envio": {
+      "metodo": "delivery",
+      "ciudad": "Santo Domingo",
+      "entregado": true
+    },
+    "productos": [
+      { "sku": "BEL-020", "nombre": "Perfume Floral", "categoria": "belleza", "cantidad": 1, "precio": 5200 },
+      { "sku": "ACC-020", "nombre": "Bolso Casual", "categoria": "accesorios", "cantidad": 1, "precio": 7600 }
+    ],
+    "pagos": ["tarjeta", "transferencia"],
+    "cupones": ["PREMIUM"]
+  },
+  {
+    "_id": "VEN-006",
+    "fecha": "2026-08-06",
+    "tienda": "Santiago Norte",
+    "canal": "fisico",
+    "total": 9200,
+    "estado": "pagada",
+    "cliente": {
+      "nombre": "Jose Medina",
+      "tipo": "mayorista",
+      "ciudad": "Santiago",
+      "edad": 44
+    },
+    "envio": {
+      "metodo": "retiro",
+      "ciudad": "Santiago",
+      "entregado": true
+    },
+    "productos": [
+      { "sku": "OFI-700", "nombre": "Silla Ergonomica", "categoria": "oficina", "cantidad": 2, "precio": 4600 }
+    ],
+    "pagos": ["transferencia"],
+    "cupones": ["MAYORISTA", "OFICINA"]
+  }
+]

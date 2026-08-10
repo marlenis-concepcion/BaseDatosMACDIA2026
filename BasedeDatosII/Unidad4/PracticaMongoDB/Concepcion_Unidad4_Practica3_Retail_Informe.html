@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Concepcion_Unidad4_Practica3_Retail</title>
+  <style>
+    @page { size: letter; margin: 2.54cm; @top-right { content: counter(page); font-family: "Times New Roman", serif; font-size: 12pt; } }
+    body { color: #111; font-family: "Times New Roman", serif; font-size: 12pt; line-height: 2; margin: 0; }
+    .cover { align-items: center; display: flex; flex-direction: column; min-height: 21.5cm; page-break-after: always; text-align: center; }
+    .logo { height: 3.8cm; margin-top: 0.2cm; object-fit: contain; width: 3.8cm; }
+    .university { font-size: 14pt; font-weight: bold; margin-top: 0.35cm; text-transform: uppercase; }
+    .subtitle { font-size: 12pt; margin-top: 0.1cm; }
+    .title { font-size: 16pt; font-weight: bold; line-height: 1.5; margin-top: 3cm; text-transform: uppercase; }
+    .cover-info { line-height: 1.8; margin-top: 3cm; width: 100%; }
+    .cover p, li p { text-indent: 0; }
+    .place-date { margin-top: auto; }
+    h1 { font-size: 12pt; font-weight: bold; line-height: 2; margin: 0 0 12pt; text-align: center; }
+    h2 { font-size: 12pt; font-weight: bold; line-height: 2; margin: 12pt 0 0; text-align: left; }
+    p { margin: 0; text-indent: 1.27cm; }
+    ul, ol { margin-bottom: 0; margin-top: 0; }
+    code, pre { font-family: "Courier New", monospace; font-size: 8.5pt; }
+    pre { background: #f5f5f5; border: 1px solid #ddd; line-height: 1.25; margin: 8pt 0; padding: 8pt; white-space: pre-wrap; }
+    table { border-collapse: collapse; line-height: 1.35; margin: 10pt 0; width: 100%; }
+    th, td { border: 1px solid #333; padding: 6pt; text-align: left; vertical-align: top; }
+    figure { break-inside: avoid; margin: 14pt 0; page-break-inside: avoid; text-align: center; }
+    figure img { border: 1px solid #555; max-height: 15.8cm; max-width: 100%; object-fit: contain; }
+    figcaption { font-size: 10pt; line-height: 1.4; margin-top: 5pt; text-align: left; }
+    .page-break { page-break-before: always; }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <img class="logo" src="../../Unidad1/PracticaMongoDB/assets/logo-uasd.jpg" alt="Logo de la Universidad Autonoma de Santo Domingo">
+    <div class="university">Universidad Autónoma de Santo Domingo</div>
+    <div class="subtitle">Primada de América</div>
+    <div class="title">Unidad 4<br>Práctica N.º 3 - Retail</div>
+    <div class="cover-info">
+      <p><strong>Asignatura:</strong> Base de Datos II</p>
+      <p><strong>Docente:</strong> Bismark Montero</p>
+      <p><strong>Estudiante:</strong> Marlenis Concepción</p>
+      <p><strong>Tema:</strong> Consultas avanzadas sobre documentos y arrays</p>
+    </div>
+    <div class="place-date"><p>Santo Domingo, República Dominicana</p><p>10 de agosto de 2026</p></div>
+  </section>
+  <main>
+    <h1>Práctica N.º 3 - Retail</h1>
+    <h2>Objetivo</h2>
+    <p>Construir consultas MongoDB sobre estructuras JSON complejas, combinando filtros, documentos embebidos, arrays y operadores de comparación y lógicos.</p>
+    <h2>Entorno utilizado</h2>
+    <ul>
+      <li>MongoDB ejecutado con Docker.</li>
+      <li>Contenedor: <code>mongodb-uasd</code>.</li>
+      <li>Imagen: <code>mongo:8.0</code>.</li>
+      <li>Conexión local: <code>mongodb://127.0.0.1:*******</code>.</li>
+      <li>Base de datos: <code>retail</code>.</li>
+      <li>Colección: <code>ventas</code>.</li>
+    </ul>
+    <h2>Comandos de ejecución</h2>
+    <pre>docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad4/PracticaMongoDB
+./run-unidad4-practica3-docker.sh</pre>
+    <h2>Lo solicitado y cómo se cumplió</h2>
+    <table>
+      <thead><tr><th>Requisito</th><th>Cumplimiento</th></tr></thead>
+      <tbody>
+        <tr><td>Script con las cinco consultas.</td><td>El archivo <code>Concepcion_Unidad4_Practica3_Retail.js</code> contiene cinco consultas numeradas.</td></tr>
+        <tr><td>Resultado obtenido para cada consulta.</td><td>Cada consulta imprime su resultado usando <code>printjson()</code>.</td></tr>
+        <tr><td>Breve explicación del operador utilizado.</td><td>El informe explica qué operador se usó y qué evalúa en cada consulta.</td></tr>
+        <tr><td>Documentos embebidos.</td><td>Se consultan campos dentro de <code>cliente</code> y <code>envio</code>.</td></tr>
+        <tr><td>Arrays.</td><td>Se consultan <code>productos</code>, <code>pagos</code> y <code>cupones</code>.</td></tr>
+      </tbody>
+    </table>
+    <h2>Explicación de las consultas</h2>
+    <ol>
+      <li><strong><code>$exists</code> y <code>$type</code>:</strong> valida que exista el documento embebido <code>envio</code> y que <code>total</code> sea numérico.</li>
+      <li><strong><code>$regex</code>:</strong> filtra nombres de clientes que comienzan con patrones específicos.</li>
+      <li><strong><code>$elemMatch</code>:</strong> exige que un mismo elemento del array <code>productos</code> cumpla categoría y precio.</li>
+      <li><strong><code>$all</code> y <code>$size</code>:</strong> verifica valores requeridos dentro de un array y cantidad exacta de elementos.</li>
+      <li><strong><code>$expr</code>, <code>$mod</code> y <code>$and</code>:</strong> combina condiciones, valida divisibilidad y compara el campo <code>total</code> contra una expresión basada en <code>cliente.edad</code>.</li>
+    </ol>
+    <h2 class="page-break">Scripts utilizados</h2>
+    <p>Los siguientes archivos fueron usados como evidencia de la solución.</p>
+    <h2>Archivo: run-unidad4-practica3-docker.sh</h2>
+    <p>Este script copia el dataset y el archivo JavaScript al contenedor, importa los documentos con <code>mongoimport</code> y ejecuta las cinco consultas avanzadas con <code>mongosh</code>.</p>
+    <pre>#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;${BASH_SOURCE[0]}&quot;)&quot; &amp;&amp; pwd)&quot;
+DATASET_FILE=&quot;$SCRIPT_DIR/dataset/ventas-retail.json&quot;
+SCRIPT_FILE=&quot;$SCRIPT_DIR/Concepcion_Unidad4_Practica3_Retail.js&quot;
+CONTAINER_NAME=&quot;mongodb-uasd&quot;
+CONTAINER_DATASET=&quot;/tmp/unidad4-ventas-retail.json&quot;
+CONTAINER_SCRIPT=&quot;/tmp/unidad4-practica3-retail.js&quot;
+
+if ! docker ps --format &#x27;{{.Names}}&#x27; | grep -qx &quot;$CONTAINER_NAME&quot;; then
+  echo &quot;MongoDB Docker no esta corriendo.&quot;
+  echo &quot;Primero ejecuta:&quot;
+  echo &quot;  docker start $CONTAINER_NAME&quot;
+  exit 1
+fi
+
+echo &quot;============================================================&quot;
+echo &quot; Unidad 4 - Practica No. 3 - Retail&quot;
+echo &quot; Estudiante: Marlenis Concepcion&quot;
+echo &quot; Docente: Bismark Montero&quot;
+echo &quot; Conexion: mongodb://127.0.0.1:*******&quot;
+echo &quot;============================================================&quot;
+echo
+
+docker cp &quot;$DATASET_FILE&quot; &quot;$CONTAINER_NAME:$CONTAINER_DATASET&quot;
+docker cp &quot;$SCRIPT_FILE&quot; &quot;$CONTAINER_NAME:$CONTAINER_SCRIPT&quot;
+
+echo &quot;Importando dataset retail...&quot;
+docker exec &quot;$CONTAINER_NAME&quot; mongoimport \
+  --db retail \
+  --collection ventas \
+  --drop \
+  --jsonArray \
+  --file &quot;$CONTAINER_DATASET&quot;
+
+echo
+echo &quot;Ejecutando cinco consultas avanzadas...&quot;
+docker exec &quot;$CONTAINER_NAME&quot; mongosh --quiet &quot;$CONTAINER_SCRIPT&quot;
+
+echo
+echo &quot;============================================================&quot;
+echo &quot; Practica ejecutada. Ya puedes tomar captura de esta consola.&quot;
+echo &quot; En Compass conecta con: mongodb://127.0.0.1:*******&quot;
+echo &quot; Base de datos: retail&quot;
+echo &quot; Coleccion: ventas&quot;
+echo &quot;============================================================&quot;
+</pre>
+    <h2>Archivo: Concepcion_Unidad4_Practica3_Retail.js</h2>
+    <p>Este script contiene las cinco consultas solicitadas y muestra el resultado obtenido para cada una.</p>
+    <pre>// Universidad Autonoma de Santo Domingo
+// Base de Datos II - Unidad 4
+// Practica No. 3 - Retail
+// Objetivo: construir consultas MongoDB sobre estructuras JSON complejas,
+// combinando filtros, documentos embebidos, arrays y operadores.
+// Estudiante: Marlenis Concepcion
+// Docente: Bismark Montero
+
+use(&quot;retail&quot;);
+
+print(&quot;\n============================================================&quot;);
+print(&quot;Practica No. 3 - Retail&quot;);
+print(&quot;Base de datos: retail&quot;);
+print(&quot;Coleccion: ventas&quot;);
+print(&quot;============================================================\n&quot;);
+
+print(&quot;Dataset cargado:&quot;);
+printjson(db.ventas.find({}, { _id: 1, tienda: 1, canal: 1, total: 1, estado: 1 }).sort({ _id: 1 }).toArray());
+
+print(&quot;\nConsulta 1 - $exists y $type&quot;);
+print(&quot;Ventas que tienen documento envio y cuyo total es numerico.&quot;);
+printjson(
+  db.ventas.find(
+    {
+      envio: { $exists: true, $type: &quot;object&quot; },
+      total: { $type: &quot;number&quot; }
+    },
+    { _id: 1, tienda: 1, total: 1, envio: 1 }
+  ).sort({ _id: 1 }).toArray()
+);
+
+print(&quot;\nConsulta 2 - $regex sobre documento embebido&quot;);
+print(&quot;Clientes cuyo nombre comienza con A, C o R.&quot;);
+printjson(
+  db.ventas.find(
+    { &quot;cliente.nombre&quot;: { $regex: &quot;^(Ana|Carlos|Rosa)&quot;, $options: &quot;i&quot; } },
+    { _id: 1, &quot;cliente.nombre&quot;: 1, &quot;cliente.ciudad&quot;: 1, total: 1 }
+  ).sort({ _id: 1 }).toArray()
+);
+
+print(&quot;\nConsulta 3 - $elemMatch en array de documentos&quot;);
+print(&quot;Ventas con un producto de tecnologia cuyo precio es mayor o igual a 14000.&quot;);
+printjson(
+  db.ventas.find(
+    {
+      productos: {
+        $elemMatch: {
+          categoria: &quot;tecnologia&quot;,
+          precio: { $gte: 14000 }
+        }
+      }
+    },
+    { _id: 1, tienda: 1, productos: 1, total: 1 }
+  ).sort({ _id: 1 }).toArray()
+);
+
+print(&quot;\nConsulta 4 - $all y $size en arrays&quot;);
+print(&quot;Ventas que usaron tarjeta y puntos, y tienen exactamente dos cupones.&quot;);
+printjson(
+  db.ventas.find(
+    {
+      pagos: { $all: [&quot;tarjeta&quot;, &quot;puntos&quot;] },
+      cupones: { $size: 2 }
+    },
+    { _id: 1, cliente: 1, pagos: 1, cupones: 1 }
+  ).sort({ _id: 1 }).toArray()
+);
+
+print(&quot;\nConsulta 5 - $expr, $mod, $and y documento anidado&quot;);
+print(&quot;Ventas pagadas, de cliente premium, con total par y total mayor que edad del cliente multiplicada por 300.&quot;);
+printjson(
+  db.ventas.find(
+    {
+      $and: [
+        { estado: &quot;pagada&quot; },
+        { &quot;cliente.tipo&quot;: &quot;premium&quot; },
+        { total: { $mod: [2, 0] } },
+        { $expr: { $gt: [&quot;$total&quot;, { $multiply: [&quot;$cliente.edad&quot;, 300] }] } }
+      ]
+    },
+    { _id: 1, &quot;cliente.nombre&quot;: 1, &quot;cliente.tipo&quot;: 1, &quot;cliente.edad&quot;: 1, total: 1, estado: 1 }
+  ).sort({ _id: 1 }).toArray()
+);
+
+print(&quot;\nResumen final&quot;);
+print(&quot;Total de ventas en la coleccion:&quot;);
+printjson(db.ventas.countDocuments());
+print(&quot;Se ejecutaron cinco consultas avanzadas sobre documentos embebidos y arrays.&quot;);
+</pre>
+    <h2>Archivo: dataset/ventas-retail.json</h2>
+    <p>Este dataset contiene ventas con documentos embebidos y arreglos para permitir consultas avanzadas sobre estructuras JSON complejas.</p>
+    <pre>[
+  {
+    &quot;_id&quot;: &quot;VEN-001&quot;,
+    &quot;fecha&quot;: &quot;2026-08-01&quot;,
+    &quot;tienda&quot;: &quot;Santo Domingo Centro&quot;,
+    &quot;canal&quot;: &quot;online&quot;,
+    &quot;total&quot;: 18500,
+    &quot;estado&quot;: &quot;pagada&quot;,
+    &quot;cliente&quot;: {
+      &quot;nombre&quot;: &quot;Ana Perez&quot;,
+      &quot;tipo&quot;: &quot;premium&quot;,
+      &quot;ciudad&quot;: &quot;Santo Domingo&quot;,
+      &quot;edad&quot;: 29
+    },
+    &quot;envio&quot;: {
+      &quot;metodo&quot;: &quot;delivery&quot;,
+      &quot;ciudad&quot;: &quot;Santo Domingo&quot;,
+      &quot;entregado&quot;: true
+    },
+    &quot;productos&quot;: [
+      { &quot;sku&quot;: &quot;TEC-001&quot;, &quot;nombre&quot;: &quot;Laptop Lenovo&quot;, &quot;categoria&quot;: &quot;tecnologia&quot;, &quot;cantidad&quot;: 1, &quot;precio&quot;: 14500 },
+      { &quot;sku&quot;: &quot;ACC-010&quot;, &quot;nombre&quot;: &quot;Mouse Inalambrico&quot;, &quot;categoria&quot;: &quot;accesorios&quot;, &quot;cantidad&quot;: 2, &quot;precio&quot;: 950 }
+    ],
+    &quot;pagos&quot;: [&quot;tarjeta&quot;, &quot;puntos&quot;],
+    &quot;cupones&quot;: [&quot;BACK2SCHOOL&quot;, &quot;PREMIUM&quot;]
+  },
+  {
+    &quot;_id&quot;: &quot;VEN-002&quot;,
+    &quot;fecha&quot;: &quot;2026-08-02&quot;,
+    &quot;tienda&quot;: &quot;Santiago Norte&quot;,
+    &quot;canal&quot;: &quot;fisico&quot;,
+    &quot;total&quot;: 6400,
+    &quot;estado&quot;: &quot;pagada&quot;,
+    &quot;cliente&quot;: {
+      &quot;nombre&quot;: &quot;Carlos Rodriguez&quot;,
+      &quot;tipo&quot;: &quot;regular&quot;,
+      &quot;ciudad&quot;: &quot;Santiago&quot;,
+      &quot;edad&quot;: 35
+    },
+    &quot;envio&quot;: {
+      &quot;metodo&quot;: &quot;retiro&quot;,
+      &quot;ciudad&quot;: &quot;Santiago&quot;,
+      &quot;entregado&quot;: true
+    },
+    &quot;productos&quot;: [
+      { &quot;sku&quot;: &quot;HOG-100&quot;, &quot;nombre&quot;: &quot;Licuadora Oster&quot;, &quot;categoria&quot;: &quot;hogar&quot;, &quot;cantidad&quot;: 1, &quot;precio&quot;: 4200 },
+      { &quot;sku&quot;: &quot;HOG-101&quot;, &quot;nombre&quot;: &quot;Set de Vasos&quot;, &quot;categoria&quot;: &quot;hogar&quot;, &quot;cantidad&quot;: 2, &quot;precio&quot;: 1100 }
+    ],
+    &quot;pagos&quot;: [&quot;efectivo&quot;]
+  },
+  {
+    &quot;_id&quot;: &quot;VEN-003&quot;,
+    &quot;fecha&quot;: &quot;2026-08-03&quot;,
+    &quot;tienda&quot;: &quot;La Vega Plaza&quot;,
+    &quot;canal&quot;: &quot;online&quot;,
+    &quot;total&quot;: 21999,
+    &quot;estado&quot;: &quot;pendiente&quot;,
+    &quot;cliente&quot;: {
+      &quot;nombre&quot;: &quot;Laura Martinez&quot;,
+      &quot;tipo&quot;: &quot;premium&quot;,
+      &quot;ciudad&quot;: &quot;La Vega&quot;,
+      &quot;edad&quot;: 41
+    },
+    &quot;envio&quot;: {
+      &quot;metodo&quot;: &quot;delivery&quot;,
+      &quot;ciudad&quot;: &quot;La Vega&quot;,
+      &quot;entregado&quot;: false
+    },
+    &quot;productos&quot;: [
+      { &quot;sku&quot;: &quot;CEL-900&quot;, &quot;nombre&quot;: &quot;Samsung Galaxy&quot;, &quot;categoria&quot;: &quot;tecnologia&quot;, &quot;cantidad&quot;: 1, &quot;precio&quot;: 21999 }
+    ],
+    &quot;pagos&quot;: [&quot;tarjeta&quot;],
+    &quot;cupones&quot;: []
+  },
+  {
+    &quot;_id&quot;: &quot;VEN-004&quot;,
+    &quot;fecha&quot;: &quot;2026-08-04&quot;,
+    &quot;tienda&quot;: &quot;Santo Domingo Este&quot;,
+    &quot;canal&quot;: &quot;fisico&quot;,
+    &quot;total&quot;: 3300,
+    &quot;estado&quot;: &quot;cancelada&quot;,
+    &quot;cliente&quot;: {
+      &quot;nombre&quot;: &quot;Miguel Santos&quot;,
+      &quot;tipo&quot;: &quot;regular&quot;,
+      &quot;ciudad&quot;: &quot;San Cristobal&quot;,
+      &quot;edad&quot;: 26
+    },
+    &quot;productos&quot;: [
+      { &quot;sku&quot;: &quot;DEP-111&quot;, &quot;nombre&quot;: &quot;Balon de Baloncesto&quot;, &quot;categoria&quot;: &quot;deportes&quot;, &quot;cantidad&quot;: 1, &quot;precio&quot;: 1800 },
+      { &quot;sku&quot;: &quot;DEP-112&quot;, &quot;nombre&quot;: &quot;Botella Deportiva&quot;, &quot;categoria&quot;: &quot;deportes&quot;, &quot;cantidad&quot;: 1, &quot;precio&quot;: 1500 }
+    ],
+    &quot;pagos&quot;: [&quot;tarjeta&quot;]
+  },
+  {
+    &quot;_id&quot;: &quot;VEN-005&quot;,
+    &quot;fecha&quot;: &quot;2026-08-05&quot;,
+    &quot;tienda&quot;: &quot;Santo Domingo Centro&quot;,
+    &quot;canal&quot;: &quot;online&quot;,
+    &quot;total&quot;: 12800,
+    &quot;estado&quot;: &quot;pagada&quot;,
+    &quot;cliente&quot;: {
+      &quot;nombre&quot;: &quot;Rosa Jimenez&quot;,
+      &quot;tipo&quot;: &quot;premium&quot;,
+      &quot;ciudad&quot;: &quot;Santo Domingo&quot;,
+      &quot;edad&quot;: 32
+    },
+    &quot;envio&quot;: {
+      &quot;metodo&quot;: &quot;delivery&quot;,
+      &quot;ciudad&quot;: &quot;Santo Domingo&quot;,
+      &quot;entregado&quot;: true
+    },
+    &quot;productos&quot;: [
+      { &quot;sku&quot;: &quot;BEL-020&quot;, &quot;nombre&quot;: &quot;Perfume Floral&quot;, &quot;categoria&quot;: &quot;belleza&quot;, &quot;cantidad&quot;: 1, &quot;precio&quot;: 5200 },
+      { &quot;sku&quot;: &quot;ACC-020&quot;, &quot;nombre&quot;: &quot;Bolso Casual&quot;, &quot;categoria&quot;: &quot;accesorios&quot;, &quot;cantidad&quot;: 1, &quot;precio&quot;: 7600 }
+    ],
+    &quot;pagos&quot;: [&quot;tarjeta&quot;, &quot;transferencia&quot;],
+    &quot;cupones&quot;: [&quot;PREMIUM&quot;]
+  },
+  {
+    &quot;_id&quot;: &quot;VEN-006&quot;,
+    &quot;fecha&quot;: &quot;2026-08-06&quot;,
+    &quot;tienda&quot;: &quot;Santiago Norte&quot;,
+    &quot;canal&quot;: &quot;fisico&quot;,
+    &quot;total&quot;: 9200,
+    &quot;estado&quot;: &quot;pagada&quot;,
+    &quot;cliente&quot;: {
+      &quot;nombre&quot;: &quot;Jose Medina&quot;,
+      &quot;tipo&quot;: &quot;mayorista&quot;,
+      &quot;ciudad&quot;: &quot;Santiago&quot;,
+      &quot;edad&quot;: 44
+    },
+    &quot;envio&quot;: {
+      &quot;metodo&quot;: &quot;retiro&quot;,
+      &quot;ciudad&quot;: &quot;Santiago&quot;,
+      &quot;entregado&quot;: true
+    },
+    &quot;productos&quot;: [
+      { &quot;sku&quot;: &quot;OFI-700&quot;, &quot;nombre&quot;: &quot;Silla Ergonomica&quot;, &quot;categoria&quot;: &quot;oficina&quot;, &quot;cantidad&quot;: 2, &quot;precio&quot;: 4600 }
+    ],
+    &quot;pagos&quot;: [&quot;transferencia&quot;],
+    &quot;cupones&quot;: [&quot;MAYORISTA&quot;, &quot;OFICINA&quot;]
+  }
+]
+</pre>
+    <h2>Archivo: Concepcion_Unidad4_Practica3_Retail.txt</h2>
+    <p>Este archivo resume el objetivo, el entorno, los comandos y las consultas usadas.</p>
+    <pre>Practica No. 3 - Retail
+
+Objetivo:
+Construir consultas MongoDB sobre estructuras JSON complejas, combinando filtros, documentos embebidos, arrays y operadores de comparacion y logicos.
+
+Entorno:
+- MongoDB ejecutado con Docker.
+- Contenedor: mongodb-uasd.
+- Conexion local: mongodb://127.0.0.1:*******.
+- Base de datos: retail.
+- Coleccion: ventas.
+
+Comando para ejecutar:
+
+docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad4/PracticaMongoDB
+./run-unidad4-practica3-docker.sh
+
+Cinco consultas incluidas:
+1. $exists y $type: validar existencia y tipo del documento envio y del total.
+2. $regex: buscar nombres de clientes que comienzan con Ana, Carlos o Rosa.
+3. $elemMatch: buscar ventas con producto de tecnologia y precio mayor o igual a 14000.
+4. $all y $size: buscar ventas con pagos especificos y cantidad exacta de cupones.
+5. $expr, $mod y $and: comparar campos y expresiones, validar total par y combinar condiciones.
+
+Resultado esperado:
+Cada consulta imprime el resultado obtenido y permite evidenciar el operador utilizado sobre documentos anidados y arrays.
+</pre>
+    <h2 class="page-break">Evidencias de la corrida</h2>
+    <p>Las capturas de consola deben mostrar la importación del dataset, las cinco consultas con sus resultados y el resumen final de la colección.</p>
+    <h2>Conclusión</h2>
+    <p>La práctica permitió aplicar consultas avanzadas sobre documentos MongoDB con estructuras JSON complejas. Se combinaron documentos embebidos, arrays y operadores especializados para recuperar información precisa dentro de la colección <code>ventas</code>.</p>
+  </main>
+</body>
+</html>
