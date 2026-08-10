@@ -604,6 +604,35 @@ La coleccion conserva los empleados importados y los documentos validos insertad
     <h2 class="page-break">Evidencias de la corrida</h2>
     <p>Las capturas de consola deben mostrar: la importación con <code>mongoimport</code>, el conflicto de <code>_id</code>, el comportamiento de <code>ordered:true</code>, el comportamiento de <code>ordered:false</code>, las consultas con operadores y el contenido final de la colección.</p>
 
+    <figure>
+      <img src="assets/evidencias/evidencia-01.png" alt="Evidencia 1">
+      <figcaption><strong>Figura 1.</strong> Inicio de la práctica e importación del dataset de empleados con <code>mongoimport</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-02.png" alt="Evidencia 2">
+      <figcaption><strong>Figura 2.</strong> Validación de los documentos importados en la colección <code>empleados</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-03.png" alt="Evidencia 3">
+      <figcaption><strong>Figura 3.</strong> Inserción individual con <code>insertOne()</code> y visualización del empleado agregado.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-04.png" alt="Evidencia 4">
+      <figcaption><strong>Figura 4.</strong> Inserción masiva ordenada con <code>ordered:true</code> y conflicto por <code>_id</code> duplicado.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-05.png" alt="Evidencia 5">
+      <figcaption><strong>Figura 5.</strong> Inserción masiva no ordenada con <code>ordered:false</code>, donde MongoDB continúa con documentos válidos.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-06.png" alt="Evidencia 6">
+      <figcaption><strong>Figura 6.</strong> Consultas con operadores de comparación y operadores lógicos.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-07.png" alt="Evidencia 7">
+      <figcaption><strong>Figura 7.</strong> Evidencia del contenido final de la colección y total final de documentos.</figcaption>
+    </figure>
+
     <h2>Conclusión</h2>
     <p>La práctica permitió demostrar la carga inicial de datos con <code>mongoimport</code>, el uso de inserciones individuales y masivas, y el efecto que produce un <code>_id</code> duplicado en inserciones ordenadas y no ordenadas. También se aplicaron operadores de comparación y lógicos para filtrar documentos de empleados en MongoDB.</p>
   </main>
