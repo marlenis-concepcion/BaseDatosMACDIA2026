@@ -397,8 +397,65 @@ Cinco consultas incluidas:
 Resultado esperado:
 Cada consulta imprime el resultado obtenido y permite evidenciar el operador utilizado sobre documentos anidados y arrays.
 </pre>
-    <h2 class="page-break">Evidencias de la corrida</h2>
-    <p>Las capturas de consola deben mostrar la importación del dataset, las cinco consultas con sus resultados y el resumen final de la colección.</p>
+    <h2 class="page-break">Scripts divididos y evidencias de la corrida</h2>
+    <p>Para facilitar la captura de pantalla, la práctica se ejecutó por partes. Después de cada bloque se incluye la evidencia correspondiente tomada de la consola.</p>
+
+    <h2>Parte 1: Entrar a la carpeta e iniciar MongoDB</h2>
+    <pre>cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad4/PracticaMongoDB
+docker start mongodb-uasd
+clear</pre>
+    <figure>
+      <img src="assets/evidencias/evidencia-01.png" alt="Evidencia 1">
+      <figcaption><strong>Figura 1.</strong> Preparación del entorno de trabajo para ejecutar la práctica Retail.</figcaption>
+    </figure>
+
+    <h2>Parte 2: Copiar e importar el dataset retail</h2>
+    <pre>docker cp dataset/ventas-retail.json mongodb-uasd:/tmp/unidad4-ventas-retail.json
+docker exec mongodb-uasd mongoimport --db retail --collection ventas --drop --jsonArray --file /tmp/unidad4-ventas-retail.json</pre>
+    <figure>
+      <img src="assets/evidencias/evidencia-02.png" alt="Evidencia 2">
+      <figcaption><strong>Figura 2.</strong> Importación del dataset con <code>mongoimport</code> hacia la base <code>retail</code> y colección <code>ventas</code>.</figcaption>
+    </figure>
+
+    <h2>Parte 3: Ver dataset cargado</h2>
+    <pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("retail"); db.ventas.find({}, { _id: 1, tienda: 1, canal: 1, total: 1, estado: 1 }).sort({ _id: 1 }).toArray()'</pre>
+    <figure>
+      <img src="assets/evidencias/evidencia-03.png" alt="Evidencia 3">
+      <figcaption><strong>Figura 3.</strong> Verificación de los documentos cargados en la colección <code>ventas</code>.</figcaption>
+    </figure>
+
+    <h2>Parte 4: Consulta 1 con $exists y $type</h2>
+    <pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("retail"); db.ventas.find({envio:{$exists:true,$type:"object"}, total:{$type:"number"}}, {_id:1, tienda:1, total:1, envio:1}).sort({_id:1}).toArray()'</pre>
+    <figure>
+      <img src="assets/evidencias/evidencia-04.png" alt="Evidencia 4">
+      <figcaption><strong>Figura 4.</strong> Resultado de la consulta que valida existencia de <code>envio</code> y tipo numérico de <code>total</code>.</figcaption>
+    </figure>
+
+    <h2>Parte 5: Consulta 2 con $regex</h2>
+    <pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("retail"); db.ventas.find({"cliente.nombre":{$regex:"^(Ana|Carlos|Rosa)",$options:"i"}}, {_id:1, "cliente.nombre":1, "cliente.ciudad":1, total:1}).sort({_id:1}).toArray()'</pre>
+    <figure>
+      <img src="assets/evidencias/evidencia-05.png" alt="Evidencia 5">
+      <figcaption><strong>Figura 5.</strong> Resultado de la consulta con expresión regular sobre el nombre del cliente.</figcaption>
+    </figure>
+
+    <h2>Parte 6: Consultas 3 y 4 con arrays</h2>
+    <pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("retail"); db.ventas.find({productos:{$elemMatch:{categoria:"tecnologia", precio:{$gte:14000}}}}, {_id:1, tienda:1, productos:1, total:1}).sort({_id:1}).toArray()'
+
+docker exec mongodb-uasd mongosh --quiet --eval 'use("retail"); db.ventas.find({pagos:{$all:["tarjeta","puntos"]}, cupones:{$size:2}}, {_id:1, cliente:1, pagos:1, cupones:1}).sort({_id:1}).toArray()'</pre>
+    <figure>
+      <img src="assets/evidencias/evidencia-06.png" alt="Evidencia 6">
+      <figcaption><strong>Figura 6.</strong> Resultados de consultas sobre arrays usando <code>$elemMatch</code>, <code>$all</code> y <code>$size</code>.</figcaption>
+    </figure>
+
+    <h2>Parte 7: Consulta 5 y resumen final</h2>
+    <pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("retail"); db.ventas.find({$and:[{estado:"pagada"},{"cliente.tipo":"premium"},{total:{$mod:[2,0]}},{$expr:{$gt:["$total",{$multiply:["$cliente.edad",300]}]}}]}, {_id:1, "cliente.nombre":1, "cliente.tipo":1, "cliente.edad":1, total:1, estado:1}).sort({_id:1}).toArray()'
+
+docker exec mongodb-uasd mongosh --quiet --eval 'use("retail"); print("Total de ventas en la coleccion:"); printjson(db.ventas.countDocuments())'</pre>
+    <figure>
+      <img src="assets/evidencias/evidencia-07.png" alt="Evidencia 7">
+      <figcaption><strong>Figura 7.</strong> Resultado de la consulta con <code>$expr</code>, <code>$mod</code> y <code>$and</code>, junto con el resumen final de documentos.</figcaption>
+    </figure>
+
     <h2>Conclusión</h2>
     <p>La práctica permitió aplicar consultas avanzadas sobre documentos MongoDB con estructuras JSON complejas. Se combinaron documentos embebidos, arrays y operadores especializados para recuperar información precisa dentro de la colección <code>ventas</code>.</p>
   </main>
