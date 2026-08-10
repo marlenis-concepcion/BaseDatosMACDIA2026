@@ -4,7 +4,6 @@ Universidad Autonoma de Santo Domingo
 Asignatura: Base de Datos II  
 Tema: Configuracion del entorno MongoDB y fundamentos de trabajo documental  
 Estudiante: Marlenis Concepcion  
-Matricula: 40225495809  
 Fecha: 10 de agosto de 2026
 
 ## 1. Proposito
@@ -22,7 +21,7 @@ Esta practica tiene como objetivo configurar y validar un entorno local de Mongo
 
 ## 3. Estructura documental
 
-La coleccion `estudiantes` contiene documentos con campos simples, arreglos y documentos embebidos. Los campos principales son `matricula`, `nombre`, `edad`, `programa`, `activo`, `competencias` y `contacto`.
+La coleccion `estudiantes` contiene documentos con campos simples, arreglos y documentos embebidos. Los campos principales son `identificador`, `nombre`, `edad`, `programa`, `activo`, `competencias` y `contacto`.
 
 El campo `competencias` se modelo como arreglo porque un estudiante puede tener varias habilidades asociadas. El campo `contacto` se modelo como documento embebido porque sus datos pertenecen directamente al estudiante.
 
@@ -30,9 +29,9 @@ El campo `competencias` se modelo como arreglo porque un estudiante puede tener 
 
 Se insertaron tres documentos iniciales:
 
-- Ana Perez, matricula `2026-001`.
-- Carlos Rodriguez, matricula `2026-002`.
-- Laura Martinez, matricula `2026-003`.
+- Ana Perez, identificador `2026-001`.
+- Carlos Rodriguez, identificador `2026-002`.
+- Laura Martinez, identificador `2026-003`.
 
 Cada documento recibio un campo `_id` unico generado por MongoDB.
 
@@ -54,7 +53,7 @@ Tambien se aplico la siguiente proyeccion:
 
 ## 6. Actividad de consolidacion
 
-Se inserto un documento adicional con la matricula `40225495809`, incluyendo los arreglos `competencias` y `certificaciones`, ademas del documento embebido `direccion`.
+Se inserto un documento adicional con la identificador generica `EST-ADICIONAL`, incluyendo los arreglos `competencias` y `certificaciones`, ademas del documento embebido `direccion`.
 
 Luego se consultaron los documentos con la competencia SQL usando:
 
@@ -68,7 +67,7 @@ Posteriormente, se actualizo el estado activo del documento original de Laura Ma
 { "$set": { "activo": true } }
 ```
 
-Finalmente, se elimino unicamente el documento adicional con la matricula `40225495809`, conservando los tres documentos originales de la practica.
+Finalmente, se elimino unicamente el documento adicional con la identificador generica `EST-ADICIONAL`, conservando los tres documentos originales de la practica.
 
 ## 7. Evidencias y cumplimiento
 
@@ -84,7 +83,7 @@ La practica fue ejecutada desde la consola utilizando Docker como entorno de eje
 | Ejecutar filtros y proyeccion. | Se consultaron activos, mayores de 30 anos, competencia Python, ciudad Santo Domingo y la proyeccion sugerida. |
 | Insertar un documento adicional. | Se inserto el documento de Marlenis Concepcion con certificaciones y direccion embebida. |
 | Actualizar un documento original. | Se actualizo el campo `activo` de Laura Martinez a `true`. |
-| Eliminar el documento adicional. | Se elimino solo el documento con matricula `40225495809` y quedaron los tres documentos originales. |
+| Eliminar el documento adicional. | Se elimino solo el documento con identificador `EST-ADICIONAL` y quedaron los tres documentos originales. |
 
 ### Capturas incluidas en el PDF
 

@@ -1,7 +1,6 @@
 # Practica MongoDB en MongoDB Compass
 
 Estudiante: Marlenis Concepcion  
-Matricula: 40225495809  
 Base de datos: `maestria_nosql`  
 Coleccion: `estudiantes`
 
@@ -20,7 +19,7 @@ Use `Add Data` > `Insert Document` o `Insert Many`.
 ```javascript
 [
   {
-    "matricula": "2026-001",
+    "identificador": "2026-001",
     "nombre": "Ana Perez",
     "edad": 29,
     "programa": "Maestria en Ciencia de Datos",
@@ -32,7 +31,7 @@ Use `Add Data` > `Insert Document` o `Insert Many`.
     }
   },
   {
-    "matricula": "2026-002",
+    "identificador": "2026-002",
     "nombre": "Carlos Rodriguez",
     "edad": 34,
     "programa": "Maestria en Ciencia de Datos",
@@ -44,7 +43,7 @@ Use `Add Data` > `Insert Document` o `Insert Many`.
     }
   },
   {
-    "matricula": "2026-003",
+    "identificador": "2026-003",
     "nombre": "Laura Martinez",
     "edad": 31,
     "programa": "Maestria en Analitica de Datos",
@@ -108,7 +107,7 @@ Project:
 
 ```javascript
 {
-  "matricula": "40225495809",
+  "identificador": "EST-ADICIONAL",
   "nombre": "Marlenis Concepcion",
   "edad": 30,
   "programa": "Maestria en Ciencia de Datos",
@@ -140,7 +139,7 @@ Actualizar el documento original de Laura Martinez:
 Filtro:
 
 ```javascript
-{ "matricula": "2026-003" }
+{ "identificador": "2026-003" }
 ```
 
 Update:
@@ -154,7 +153,7 @@ Update:
 Filtro:
 
 ```javascript
-{ "matricula": "40225495809" }
+{ "identificador": "EST-ADICIONAL" }
 ```
 
 Resultado esperado: la coleccion conserva los tres documentos originales.

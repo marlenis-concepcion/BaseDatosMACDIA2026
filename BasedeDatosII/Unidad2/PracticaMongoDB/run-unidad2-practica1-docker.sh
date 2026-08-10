@@ -2,9 +2,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SCRIPT_FILE="$SCRIPT_DIR/Concepcion_PracticaMongoDB_mongosh.js"
+SCRIPT_FILE="$SCRIPT_DIR/Concepcion_Unidad2_Practica1_Colegio.js"
 CONTAINER_NAME="mongodb-uasd"
-CONTAINER_SCRIPT="/tmp/practica-mongodb-uasd.js"
+CONTAINER_SCRIPT="/tmp/unidad2-practica1-colegio.js"
 
 if ! docker ps --format '{{.Names}}' | grep -qx "$CONTAINER_NAME"; then
   echo "MongoDB Docker no esta corriendo."
@@ -14,9 +14,8 @@ if ! docker ps --format '{{.Names}}' | grep -qx "$CONTAINER_NAME"; then
 fi
 
 echo "============================================================"
-echo " Practica MongoDB - Base de Datos II"
+echo " Unidad 2 - Practica No. 1 - Colegio"
 echo " Estudiante: Marlenis Concepcion"
-echo " Identificador: EST-ADICIONAL"
 echo " Docente: Bismark Montero"
 echo " Conexion: mongodb://127.0.0.1:37017"
 echo "============================================================"
@@ -29,6 +28,6 @@ echo
 echo "============================================================"
 echo " Practica ejecutada. Ya puedes tomar captura de esta consola."
 echo " En Compass conecta con: mongodb://127.0.0.1:37017"
-echo " Base de datos: maestria_nosql"
+echo " Base de datos: colegio"
 echo " Coleccion: estudiantes"
 echo "============================================================"

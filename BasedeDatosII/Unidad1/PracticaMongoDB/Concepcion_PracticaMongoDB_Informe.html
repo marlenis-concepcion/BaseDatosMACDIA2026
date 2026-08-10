@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>40225495809_Concepcion_PracticaMongoDB</title>
+  <title>Concepcion_PracticaMongoDB</title>
   <style>
     @page {
       size: letter;
@@ -192,7 +192,7 @@
       <p><strong>Unidad:</strong> Unidad 1</p>
       <p><strong>Docente:</strong> Bismark Montero</p>
       <p><strong>Estudiante:</strong> Marlenis Concepción</p>
-      <p><strong>Matrícula:</strong> 40225495809</p>
+      <p><strong>Matrícula:</strong> EST-ADICIONAL</p>
     </div>
 
     <div class="place-date">
@@ -218,7 +218,7 @@
     </ul>
 
     <h2>Estructura documental</h2>
-    <p>La colección <code>estudiantes</code> contiene documentos con campos simples, arreglos y documentos embebidos. Los campos principales son <code>matricula</code>, <code>nombre</code>, <code>edad</code>, <code>programa</code>, <code>activo</code>, <code>competencias</code> y <code>contacto</code>.</p>
+    <p>La colección <code>estudiantes</code> contiene documentos con campos simples, arreglos y documentos embebidos. Los campos principales son <code>identificador</code>, <code>nombre</code>, <code>edad</code>, <code>programa</code>, <code>activo</code>, <code>competencias</code> y <code>contacto</code>.</p>
     <p>El campo <code>competencias</code> se modeló como arreglo porque un estudiante puede tener varias habilidades asociadas. El campo <code>contacto</code> se modeló como documento embebido porque sus datos pertenecen directamente al estudiante.</p>
 
     <h2>Documentos originales insertados</h2>
@@ -241,12 +241,12 @@
     <pre>{ "_id": 0, "nombre": 1, "programa": 1, "competencias": 1 }</pre>
 
     <h2>Actividad de consolidación</h2>
-    <p>Se insertó un documento adicional con la matrícula <code>40225495809</code>, incluyendo los arreglos <code>competencias</code> y <code>certificaciones</code>, además del documento embebido <code>direccion</code>.</p>
+    <p>Se insertó un documento adicional con la matrícula <code>EST-ADICIONAL</code>, incluyendo los arreglos <code>competencias</code> y <code>certificaciones</code>, además del documento embebido <code>direccion</code>.</p>
     <p>Luego se consultaron los documentos con la competencia SQL mediante el filtro:</p>
     <pre>{ "competencias": "SQL" }</pre>
     <p>Posteriormente, se actualizó el estado activo del documento original de Laura Martínez:</p>
     <pre>{ "$set": { "activo": true } }</pre>
-    <p>Finalmente, se eliminó únicamente el documento adicional con la matrícula <code>40225495809</code>, conservando los tres documentos originales de la práctica.</p>
+    <p>Finalmente, se eliminó únicamente el documento adicional con la matrícula <code>EST-ADICIONAL</code>, conservando los tres documentos originales de la práctica.</p>
 
     <h2>Evidencias</h2>
     <p>La práctica fue ejecutada desde la consola utilizando Docker como entorno de ejecución para MongoDB. El contenedor <code>mongodb-uasd</code> expuso el servicio local mediante la cadena <code>mongodb://127.0.0.1:37017</code>. Las capturas siguientes evidencian la corrida del script, la inserción de documentos, las consultas, la proyección, la actualización y la eliminación del documento adicional.</p>
@@ -278,7 +278,7 @@
         </tr>
         <tr>
           <td>Insertar un documento adicional con certificaciones y dirección.</td>
-          <td>Se insertó el documento adicional de Marlenis Concepción con matrícula <code>40225495809</code>, arreglo <code>certificaciones</code> y documento embebido <code>direccion</code>.</td>
+          <td>Se insertó el documento adicional de Marlenis Concepción con matrícula <code>EST-ADICIONAL</code>, arreglo <code>certificaciones</code> y documento embebido <code>direccion</code>.</td>
         </tr>
         <tr>
           <td>Actualizar un documento original.</td>
@@ -286,7 +286,7 @@
         </tr>
         <tr>
           <td>Eliminar únicamente el documento adicional.</td>
-          <td>Se eliminó el documento con matrícula <code>40225495809</code> y la colección conservó los tres documentos originales.</td>
+          <td>Se eliminó el documento con matrícula <code>EST-ADICIONAL</code> y la colección conservó los tres documentos originales.</td>
         </tr>
       </tbody>
     </table>

@@ -2,7 +2,6 @@
 // Base de Datos II - Unidad 1
 // Practica MongoDB: maestria_nosql.estudiantes
 // Estudiante: Marlenis Concepcion
-// Matricula: 40225495809
 
 use("maestria_nosql");
 
@@ -12,7 +11,7 @@ db.createCollection("estudiantes");
 
 db.estudiantes.insertMany([
   {
-    matricula: "2026-001",
+    identificador: "2026-001",
     nombre: "Ana Perez",
     edad: 29,
     programa: "Maestria en Ciencia de Datos",
@@ -24,7 +23,7 @@ db.estudiantes.insertMany([
     }
   },
   {
-    matricula: "2026-002",
+    identificador: "2026-002",
     nombre: "Carlos Rodriguez",
     edad: 34,
     programa: "Maestria en Ciencia de Datos",
@@ -36,7 +35,7 @@ db.estudiantes.insertMany([
     }
   },
   {
-    matricula: "2026-003",
+    identificador: "2026-003",
     nombre: "Laura Martinez",
     edad: 31,
     programa: "Maestria en Analitica de Datos",
@@ -74,7 +73,7 @@ printjson(
 
 print("\n7. Insertar documento adicional");
 db.estudiantes.insertOne({
-  matricula: "40225495809",
+  identificador: "EST-ADICIONAL",
   nombre: "Marlenis Concepcion",
   edad: 30,
   programa: "Maestria en Ciencia de Datos",
@@ -91,20 +90,20 @@ db.estudiantes.insertOne({
     pais: "Republica Dominicana"
   }
 });
-printjson(db.estudiantes.find({ matricula: "40225495809" }).toArray());
+printjson(db.estudiantes.find({ identificador: "EST-ADICIONAL" }).toArray());
 
 print("\n8. Consultar documentos con competencia SQL");
 printjson(db.estudiantes.find({ competencias: "SQL" }).toArray());
 
 print("\n9. Actualizar estado activo de un documento original");
 db.estudiantes.updateOne(
-  { matricula: "2026-003" },
+  { identificador: "2026-003" },
   { $set: { activo: true } }
 );
-printjson(db.estudiantes.find({ matricula: "2026-003" }).toArray());
+printjson(db.estudiantes.find({ identificador: "2026-003" }).toArray());
 
 print("\n10. Eliminar unicamente el documento adicional");
-db.estudiantes.deleteOne({ matricula: "40225495809" });
+db.estudiantes.deleteOne({ identificador: "EST-ADICIONAL" });
 printjson(db.estudiantes.find({}).toArray());
 
 print("\nPractica finalizada. La coleccion conserva los tres documentos originales.");

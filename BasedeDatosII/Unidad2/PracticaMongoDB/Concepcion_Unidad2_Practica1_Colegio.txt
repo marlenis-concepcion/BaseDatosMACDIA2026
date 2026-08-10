@@ -1,0 +1,36 @@
+Practica No. 1 - Colegio
+
+Objetivo:
+Aplicar operaciones CRUD sobre documentos MongoDB utilizando una estructura con documentos y arreglos anidados.
+
+Entorno:
+- MongoDB ejecutado con Docker.
+- Contenedor: mongodb-uasd.
+- Conexion local: mongodb://127.0.0.1:37017.
+- Base de datos: colegio.
+- Coleccion: estudiantes.
+
+Archivo principal con instrucciones:
+Concepcion_Unidad2_Practica1_Colegio.js
+
+Comando para ejecutar:
+
+docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad2/PracticaMongoDB
+./run-unidad2-practica1-docker.sh
+
+Operaciones incluidas:
+1. CREATE: insertar tres estudiantes originales.
+2. READ: consultar todos los activos.
+3. READ: consultar estudiantes de 6to grado, seccion A.
+4. READ: consultar por ciudad dentro del documento anidado direccion.
+5. READ: consultar por actividad dentro de un arreglo.
+6. READ: consultar por asignatura dentro de un arreglo de documentos.
+7. UPDATE: actualizar el estado activo de Laura Martinez.
+8. UPDATE: agregar una actividad a Carlos Rodriguez.
+9. UPDATE: modificar una calificacion dentro del arreglo asignaturas.
+10. CREATE: insertar un estudiante adicional.
+11. DELETE: eliminar unicamente el estudiante adicional.
+
+Resultado esperado:
+La coleccion conserva los tres estudiantes originales y demuestra el uso de documentos anidados, arreglos simples y arreglos de documentos.

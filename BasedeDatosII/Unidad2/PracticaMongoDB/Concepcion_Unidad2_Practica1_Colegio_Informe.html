@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Concepcion_Unidad2_Practica1_Colegio</title>
+  <style>
+    @page {
+      size: letter;
+      margin: 2.54cm;
+      @top-right {
+        content: counter(page);
+        font-family: "Times New Roman", serif;
+        font-size: 12pt;
+      }
+    }
+
+    body {
+      color: #111;
+      font-family: "Times New Roman", serif;
+      font-size: 12pt;
+      line-height: 2;
+      margin: 0;
+    }
+
+    .cover {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      min-height: 21.5cm;
+      page-break-after: always;
+      text-align: center;
+    }
+
+    .logo {
+      height: 3.8cm;
+      margin-top: 0.2cm;
+      object-fit: contain;
+      width: 3.8cm;
+    }
+
+    .university {
+      font-size: 14pt;
+      font-weight: bold;
+      margin-top: 0.35cm;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 12pt;
+      margin-top: 0.1cm;
+    }
+
+    .title {
+      font-size: 16pt;
+      font-weight: bold;
+      line-height: 1.5;
+      margin-top: 3cm;
+      text-transform: uppercase;
+    }
+
+    .cover-info {
+      line-height: 1.8;
+      margin-top: 3cm;
+      width: 100%;
+    }
+
+    .cover p,
+    li p {
+      text-indent: 0;
+    }
+
+    .place-date {
+      margin-top: auto;
+    }
+
+    h1 {
+      font-size: 12pt;
+      font-weight: bold;
+      line-height: 2;
+      margin: 0 0 12pt;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 12pt;
+      font-weight: bold;
+      line-height: 2;
+      margin: 12pt 0 0;
+      text-align: left;
+    }
+
+    p {
+      margin: 0;
+      text-indent: 1.27cm;
+    }
+
+    ul,
+    ol {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
+
+    code,
+    pre {
+      font-family: "Courier New", monospace;
+      font-size: 9pt;
+    }
+
+    pre {
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      line-height: 1.25;
+      margin: 8pt 0;
+      padding: 8pt;
+      white-space: pre-wrap;
+    }
+
+    table {
+      border-collapse: collapse;
+      line-height: 1.35;
+      margin: 10pt 0;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #333;
+      padding: 6pt;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    figure {
+      break-inside: avoid;
+      margin: 14pt 0;
+      page-break-inside: avoid;
+      text-align: center;
+    }
+
+    figure img {
+      border: 1px solid #555;
+      max-height: 15.8cm;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    figcaption {
+      font-size: 10pt;
+      line-height: 1.4;
+      margin-top: 5pt;
+      text-align: left;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <img class="logo" src="../../Unidad1/PracticaMongoDB/assets/logo-uasd.jpg" alt="Logo de la Universidad Autonoma de Santo Domingo">
+    <div class="university">Universidad Autónoma de Santo Domingo</div>
+    <div class="subtitle">Primada de América</div>
+
+    <div class="title">
+      Unidad 2<br>
+      Práctica N.º 1 - Colegio
+    </div>
+
+    <div class="cover-info">
+      <p><strong>Asignatura:</strong> Base de Datos II</p>
+      <p><strong>Docente:</strong> Bismark Montero</p>
+      <p><strong>Estudiante:</strong> Marlenis Concepción</p>
+      <p><strong>Tema:</strong> Operaciones CRUD en MongoDB con documentos y arreglos anidados</p>
+    </div>
+
+    <div class="place-date">
+      <p>Santo Domingo, República Dominicana</p>
+      <p>10 de agosto de 2026</p>
+    </div>
+  </section>
+
+  <main>
+    <h1>Práctica N.º 1 - Colegio</h1>
+
+    <h2>Objetivo</h2>
+    <p>Aplicar las operaciones CRUD sobre documentos MongoDB utilizando una estructura con documentos y arreglos anidados.</p>
+
+    <h2>Entorno utilizado</h2>
+    <ul>
+      <li>MongoDB ejecutado con Docker.</li>
+      <li>Contenedor: <code>mongodb-uasd</code>.</li>
+      <li>Imagen: <code>mongo:8.0</code>.</li>
+      <li>Conexión local: <code>mongodb://127.0.0.1:37017</code>.</li>
+      <li>Base de datos: <code>colegio</code>.</li>
+      <li>Colección: <code>estudiantes</code>.</li>
+    </ul>
+
+    <h2>Comandos de ejecución</h2>
+    <pre>docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad2/PracticaMongoDB
+./run-unidad2-practica1-docker.sh</pre>
+
+    <h2>Lo solicitado y cómo se cumplió</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Requisito</th>
+          <th>Cumplimiento</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Aplicar operaciones CRUD.</td>
+          <td>Se insertaron, consultaron, actualizaron y eliminaron documentos en MongoDB.</td>
+        </tr>
+        <tr>
+          <td>Usar documentos anidados.</td>
+          <td>Se modelaron los campos <code>direccion</code> y <code>tutor</code> como documentos embebidos.</td>
+        </tr>
+        <tr>
+          <td>Usar arreglos anidados.</td>
+          <td>Se usaron arreglos simples como <code>actividades</code> y arreglos de documentos como <code>asignaturas</code>.</td>
+        </tr>
+        <tr>
+          <td>Conservar instrucciones como evidencia.</td>
+          <td>Se creó el script <code>Concepcion_Unidad2_Practica1_Colegio.js</code> con todas las instrucciones ejecutadas.</td>
+        </tr>
+        <tr>
+          <td>Tomar capturas de resultados.</td>
+          <td>Se incorporaron capturas de la corrida por consola como figuras del informe.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Resumen de operaciones realizadas</h2>
+    <ul>
+      <li><strong>Create:</strong> inserción de tres estudiantes originales y un estudiante adicional para demostrar eliminación.</li>
+      <li><strong>Read:</strong> consultas por estado activo, grado/sección, ciudad, actividad y asignatura con calificación.</li>
+      <li><strong>Update:</strong> actualización del estado activo, adición de una actividad y cambio de calificación dentro del arreglo <code>asignaturas</code>.</li>
+      <li><strong>Delete:</strong> eliminación únicamente del estudiante adicional, conservando los tres documentos originales.</li>
+    </ul>
+
+    <h2>Scripts utilizados</h2>
+    <p>Los siguientes scripts fueron usados como evidencia de las instrucciones ejecutadas en la práctica.</p>
+
+    <h2>Archivo: Concepcion_Unidad2_Practica1_Colegio.js</h2>
+    <p>Este script es el archivo principal de la práctica. Selecciona la base de datos <code>colegio</code>, prepara la colección <code>estudiantes</code> y ejecuta todas las operaciones solicitadas. Primero inserta estudiantes con documentos anidados, como <code>direccion</code> y <code>tutor</code>, y con arreglos como <code>telefonos</code>, <code>asignaturas</code> y <code>actividades</code>. Luego realiza consultas de lectura, actualizaciones y una eliminación controlada para evidenciar el uso completo de CRUD en MongoDB.</p>
+    <pre>// Universidad Autonoma de Santo Domingo
+// Base de Datos II - Unidad 2
+// Practica No. 1 - Colegio
+// Objetivo: aplicar operaciones CRUD sobre documentos MongoDB
+// utilizando documentos y arreglos anidados.
+// Estudiante: Marlenis Concepcion
+// Docente: Bismark Montero
+
+use("colegio");
+
+print("\n============================================================");
+print("Practica No. 1 - Colegio");
+print("Base de datos: colegio");
+print("Coleccion: estudiantes");
+print("============================================================\n");
+
+print("Preparacion: limpiar coleccion para una corrida reproducible");
+db.estudiantes.drop();
+db.createCollection("estudiantes");
+
+print("\nCREATE 1: Insertar estudiantes con documentos y arreglos anidados");
+db.estudiantes.insertMany([
+  {
+    matricula: "EST-2026-001",
+    nombre: "Ana Perez",
+    edad: 12,
+    grado: "6to",
+    seccion: "A",
+    activo: true,
+    direccion: {
+      ciudad: "Santo Domingo",
+      sector: "Gazcue",
+      calle: "Principal"
+    },
+    tutor: {
+      nombre: "Maria Perez",
+      parentesco: "Madre",
+      telefonos: ["809-555-1001", "829-555-1001"]
+    },
+    asignaturas: [
+      { nombre: "Matematica", calificacion: 92 },
+      { nombre: "Lengua Espanola", calificacion: 88 },
+      { nombre: "Ciencias Naturales", calificacion: 91 }
+    ],
+    actividades: ["Lectura", "Robotica"]
+  },
+  {
+    matricula: "EST-2026-002",
+    nombre: "Carlos Rodriguez",
+    edad: 13,
+    grado: "7mo",
+    seccion: "B",
+    activo: true,
+    direccion: {
+      ciudad: "Santiago",
+      sector: "Los Jardines",
+      calle: "Duarte"
+    },
+    tutor: {
+      nombre: "Jose Rodriguez",
+      parentesco: "Padre",
+      telefonos: ["809-555-2002"]
+    },
+    asignaturas: [
+      { nombre: "Matematica", calificacion: 85 },
+      { nombre: "Lengua Espanola", calificacion: 90 },
+      { nombre: "Sociales", calificacion: 87 }
+    ],
+    actividades: ["Baloncesto", "Ajedrez"]
+  },
+  {
+    matricula: "EST-2026-003",
+    nombre: "Laura Martinez",
+    edad: 11,
+    grado: "6to",
+    seccion: "A",
+    activo: false,
+    direccion: {
+      ciudad: "La Vega",
+      sector: "Centro",
+      calle: "Las Flores"
+    },
+    tutor: {
+      nombre: "Rosa Martinez",
+      parentesco: "Madre",
+      telefonos: ["809-555-3003", "849-555-3003"]
+    },
+    asignaturas: [
+      { nombre: "Matematica", calificacion: 78 },
+      { nombre: "Lengua Espanola", calificacion: 84 },
+      { nombre: "Ciencias Naturales", calificacion: 80 }
+    ],
+    actividades: ["Pintura", "Lectura"]
+  }
+]);
+printjson(db.estudiantes.find({}, { _id: 0 }).toArray());
+
+print("\nREAD 1: Consultar todos los estudiantes activos");
+printjson(db.estudiantes.find({ activo: true }, { _id: 0 }).toArray());
+
+print("\nREAD 2: Consultar estudiantes de 6to grado, seccion A");
+printjson(db.estudiantes.find({ grado: "6to", seccion: "A" }, { _id: 0 }).toArray());
+
+print("\nREAD 3: Consultar por documento anidado: ciudad Santo Domingo");
+printjson(db.estudiantes.find({ "direccion.ciudad": "Santo Domingo" }, { _id: 0 }).toArray());
+
+print("\nREAD 4: Consultar por arreglo simple: actividad Lectura");
+printjson(db.estudiantes.find({ actividades: "Lectura" }, { _id: 0 }).toArray());
+
+print("\nREAD 5: Consultar por arreglo de documentos: Matematica con calificacion mayor o igual a 90");
+printjson(
+  db.estudiantes.find(
+    {
+      asignaturas: {
+        $elemMatch: {
+          nombre: "Matematica",
+          calificacion: { $gte: 90 }
+        }
+      }
+    },
+    { _id: 0, matricula: 1, nombre: 1, asignaturas: 1 }
+  ).toArray()
+);
+
+print("\nUPDATE 1: Actualizar estado de Laura Martinez a activo");
+db.estudiantes.updateOne(
+  { matricula: "EST-2026-003" },
+  { $set: { activo: true } }
+);
+printjson(db.estudiantes.find({ matricula: "EST-2026-003" }, { _id: 0 }).toArray());
+
+print("\nUPDATE 2: Agregar una nueva actividad a Carlos Rodriguez");
+db.estudiantes.updateOne(
+  { matricula: "EST-2026-002" },
+  { $addToSet: { actividades: "Programacion" } }
+);
+printjson(db.estudiantes.find({ matricula: "EST-2026-002" }, { _id: 0 }).toArray());
+
+print("\nUPDATE 3: Actualizar calificacion de Matematica de Carlos Rodriguez");
+db.estudiantes.updateOne(
+  { matricula: "EST-2026-002", "asignaturas.nombre": "Matematica" },
+  { $set: { "asignaturas.$.calificacion": 89 } }
+);
+printjson(
+  db.estudiantes.find(
+    { matricula: "EST-2026-002" },
+    { _id: 0, matricula: 1, nombre: 1, asignaturas: 1 }
+  ).toArray()
+);
+
+print("\nCREATE 2: Insertar estudiante adicional para demostrar delete");
+db.estudiantes.insertOne({
+  matricula: "EST-2026-004",
+  nombre: "Miguel Santos",
+  edad: 14,
+  grado: "8vo",
+  seccion: "C",
+  activo: true,
+  direccion: {
+    ciudad: "San Cristobal",
+    sector: "Madre Vieja",
+    calle: "Independencia"
+  },
+  tutor: {
+    nombre: "Elena Santos",
+    parentesco: "Madre",
+    telefonos: ["809-555-4004"]
+  },
+  asignaturas: [
+    { nombre: "Matematica", calificacion: 81 },
+    { nombre: "Ingles", calificacion: 93 }
+  ],
+  actividades: ["Beisbol"]
+});
+printjson(db.estudiantes.find({ matricula: "EST-2026-004" }, { _id: 0 }).toArray());
+
+print("\nDELETE: Eliminar unicamente el estudiante adicional");
+db.estudiantes.deleteOne({ matricula: "EST-2026-004" });
+printjson(db.estudiantes.find({}, { _id: 0, matricula: 1, nombre: 1, activo: 1 }).toArray());
+
+print("\nRESUMEN FINAL");
+print("Total de estudiantes conservados:");
+printjson(db.estudiantes.countDocuments());
+print("La practica conserva los tres estudiantes originales y evidencia operaciones CRUD.");</pre>
+
+    <h2>Archivo: run-unidad2-practica1-docker.sh</h2>
+    <p>Este script automatiza la ejecución de la práctica usando Docker. Verifica que el contenedor <code>mongodb-uasd</code> esté activo, copia el archivo JavaScript al contenedor y lo ejecuta con <code>mongosh</code>. También imprime en la consola los datos del entorno usado, incluyendo la conexión local, la base de datos y la colección, para que la salida pueda tomarse como evidencia.</p>
+    <pre>#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &amp;&amp; pwd)"
+SCRIPT_FILE="$SCRIPT_DIR/Concepcion_Unidad2_Practica1_Colegio.js"
+CONTAINER_NAME="mongodb-uasd"
+CONTAINER_SCRIPT="/tmp/unidad2-practica1-colegio.js"
+
+if ! docker ps --format '{{.Names}}' | grep -qx "$CONTAINER_NAME"; then
+  echo "MongoDB Docker no esta corriendo."
+  echo "Primero ejecuta:"
+  echo "  docker start $CONTAINER_NAME"
+  exit 1
+fi
+
+echo "============================================================"
+echo " Unidad 2 - Practica No. 1 - Colegio"
+echo " Estudiante: Marlenis Concepcion"
+echo " Docente: Bismark Montero"
+echo " Conexion: mongodb://127.0.0.1:37017"
+echo "============================================================"
+echo
+
+docker cp "$SCRIPT_FILE" "$CONTAINER_NAME:$CONTAINER_SCRIPT"
+docker exec "$CONTAINER_NAME" mongosh --quiet "$CONTAINER_SCRIPT"
+
+echo
+echo "============================================================"
+echo " Practica ejecutada. Ya puedes tomar captura de esta consola."
+echo " En Compass conecta con: mongodb://127.0.0.1:37017"
+echo " Base de datos: colegio"
+echo " Coleccion: estudiantes"
+echo "============================================================"</pre>
+
+    <h2>Archivo: Concepcion_Unidad2_Practica1_Colegio.txt</h2>
+    <p>Este archivo funciona como resumen de entrega. Contiene el objetivo de la práctica, el entorno utilizado, el comando para ejecutar la solución y la lista ordenada de operaciones incluidas. Sirve como evidencia textual rápida de qué se hizo y cómo se puede repetir la corrida.</p>
+    <pre>Practica No. 1 - Colegio
+
+Objetivo:
+Aplicar operaciones CRUD sobre documentos MongoDB utilizando una estructura con documentos y arreglos anidados.
+
+Entorno:
+- MongoDB ejecutado con Docker.
+- Contenedor: mongodb-uasd.
+- Conexion local: mongodb://127.0.0.1:37017.
+- Base de datos: colegio.
+- Coleccion: estudiantes.
+
+Archivo principal con instrucciones:
+Concepcion_Unidad2_Practica1_Colegio.js
+
+Comando para ejecutar:
+
+docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad2/PracticaMongoDB
+./run-unidad2-practica1-docker.sh
+
+Operaciones incluidas:
+1. CREATE: insertar tres estudiantes originales.
+2. READ: consultar todos los activos.
+3. READ: consultar estudiantes de 6to grado, seccion A.
+4. READ: consultar por ciudad dentro del documento anidado direccion.
+5. READ: consultar por actividad dentro de un arreglo.
+6. READ: consultar por asignatura dentro de un arreglo de documentos.
+7. UPDATE: actualizar el estado activo de Laura Martinez.
+8. UPDATE: agregar una actividad a Carlos Rodriguez.
+9. UPDATE: modificar una calificacion dentro del arreglo asignaturas.
+10. CREATE: insertar un estudiante adicional.
+11. DELETE: eliminar unicamente el estudiante adicional.
+
+Resultado esperado:
+La coleccion conserva los tres estudiantes originales y demuestra el uso de documentos anidados, arreglos simples y arreglos de documentos.</pre>
+
+    <h2 class="page-break">Evidencias de la corrida</h2>
+    <figure>
+      <img src="assets/evidencias/evidencia-01.png" alt="Evidencia 1">
+      <figcaption><strong>Figura 1.</strong> Inicio de la ejecución y preparación de la práctica en consola.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-02.png" alt="Evidencia 2">
+      <figcaption><strong>Figura 2.</strong> Inserción de estudiantes y visualización de documentos con estructuras anidadas.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-03.png" alt="Evidencia 3">
+      <figcaption><strong>Figura 3.</strong> Consulta de documentos insertados en la colección <code>estudiantes</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-04.png" alt="Evidencia 4">
+      <figcaption><strong>Figura 4.</strong> Consultas de lectura sobre estudiantes activos y filtros iniciales.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-05.png" alt="Evidencia 5">
+      <figcaption><strong>Figura 5.</strong> Consulta por grado, sección y datos dentro de documentos anidados.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-06.png" alt="Evidencia 6">
+      <figcaption><strong>Figura 6.</strong> Evidencia de consulta por ciudad y actividad dentro de arreglos.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-07.png" alt="Evidencia 7">
+      <figcaption><strong>Figura 7.</strong> Consulta de arreglo de documentos usando asignatura y calificación.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-08.png" alt="Evidencia 8">
+      <figcaption><strong>Figura 8.</strong> Actualización del estado activo de un estudiante.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-09.png" alt="Evidencia 9">
+      <figcaption><strong>Figura 9.</strong> Adición de actividad a un arreglo mediante actualización.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-10.png" alt="Evidencia 10">
+      <figcaption><strong>Figura 10.</strong> Actualización de calificación dentro del arreglo <code>asignaturas</code>.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-11.png" alt="Evidencia 11">
+      <figcaption><strong>Figura 11.</strong> Inserción del estudiante adicional para demostrar la operación delete.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-12.png" alt="Evidencia 12">
+      <figcaption><strong>Figura 12.</strong> Eliminación del estudiante adicional.</figcaption>
+    </figure>
+    <figure>
+      <img src="assets/evidencias/evidencia-13.png" alt="Evidencia 13">
+      <figcaption><strong>Figura 13.</strong> Resultado final con los tres estudiantes originales conservados.</figcaption>
+    </figure>
+
+    <h2>Conclusión</h2>
+    <p>La práctica permitió demostrar el uso de MongoDB para manejar datos académicos con una estructura flexible. Se aplicaron operaciones CRUD sobre documentos con campos simples, documentos embebidos y arreglos, cumpliendo el objetivo de trabajar con una estructura de estudiante propia de un escenario de colegio.</p>
+  </main>
+</body>
+</html>
