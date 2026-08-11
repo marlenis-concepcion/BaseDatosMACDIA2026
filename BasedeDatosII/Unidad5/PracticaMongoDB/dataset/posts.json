@@ -1,0 +1,32 @@
+[
+  {
+    "_id": {
+      "$oid": "66f200000000000000000001"
+    },
+    "userId": {
+      "$oid": "66f100000000000000000001"
+    },
+    "title": "Primer post",
+    "content": "Hola MongoDB",
+    "tags_ref": [],
+    "tags_embedded": [
+      "nosql",
+      "mongodb"
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "66f200000000000000000002"
+    },
+    "userId": {
+      "$oid": "66f100000000000000000002"
+    },
+    "title": "Geospatial demo",
+    "content": "Probando puntos y consultas",
+    "tags_ref": [],
+    "tags_embedded": [
+      "geo",
+      "demo"
+    ]
+  }
+]

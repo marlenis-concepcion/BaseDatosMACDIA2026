@@ -1,0 +1,44 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Universidad Autonoma de Santo Domingo"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -69.91997,
+          18.46077
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Parque Mirador Sur"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -69.9497,
+          18.4318
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Faro a Col\u00f3n"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -69.8735,
+          18.4801
+        ]
+      }
+    }
+  ]
+}

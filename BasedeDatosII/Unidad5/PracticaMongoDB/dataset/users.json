@@ -1,0 +1,60 @@
+[
+  {
+    "_id": {
+      "$oid": "66f100000000000000000001"
+    },
+    "username": "bismark",
+    "email": "bismark@example.com",
+    "profile": {
+      "fullName": "Bismark Montero",
+      "role": "Student",
+      "phone": "+1-809-555-0101"
+    },
+    "addresses": [
+      {
+        "type": "home",
+        "street": "Av. M\u00e1ximo G\u00f3mez",
+        "city": "Santo Domingo",
+        "country": "DO"
+      },
+      {
+        "type": "work",
+        "street": "Calle Proyecto",
+        "city": "Santo Domingo",
+        "country": "DO"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "66f100000000000000000002"
+    },
+    "username": "diana",
+    "email": "diana@example.com",
+    "profile": {
+      "fullName": "Diana Santa",
+      "role": "TA",
+      "phone": "+1-809-555-0102"
+    },
+    "addresses": [
+      {
+        "type": "home",
+        "street": "Av. John F. Kennedy",
+        "city": "Santo Domingo",
+        "country": "DO"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$oid": "66f100000000000000000003"
+    },
+    "username": "nicolas",
+    "email": "nicolas@example.com",
+    "profile": {
+      "fullName": "Nicolas Bringas",
+      "role": "Student",
+      "phone": "+1-809-555-0103"
+    }
+  }
+]

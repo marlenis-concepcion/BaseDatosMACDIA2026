@@ -1,0 +1,29 @@
+Practica No. 4 - Modelado de Datos: Embebido vs. Referenciado
+
+Objetivo:
+Desarrollar un ejercicio aplicando una relacion de tipo embebido y una relacion de tipo referenciada, incluyendo documentos JSON, consultas que demuestren el funcionamiento de cada modelo, uso de $lookup y validacion de esquemas.
+
+Entorno:
+- MongoDB ejecutado con Docker.
+- Contenedor: mongodb-uasd.
+- Conexion local: mongodb://127.0.0.1:*******.
+- Base de datos: unidad5_modelado.
+- Colecciones: usuarios, publicaciones, etiquetas, inscripciones.
+
+Comando para ejecutar:
+
+docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad5/PracticaMongoDB
+./run-unidad5-practica4-docker.sh
+
+Partes incluidas:
+1. Modelo embebido: usuario con perfil 1:1 y direcciones 1:N.
+2. Consulta sobre documento embebido: direcciones.ciudad = Santo Domingo.
+3. Modelo referenciado: publicaciones relacionadas con usuarios y etiquetas.
+4. $lookup publicaciones -> usuarios.
+5. $lookup pipeline publicaciones -> etiquetas.
+6. Schema Validation en la coleccion inscripciones.
+7. Insercion valida y rechazo de insercion invalida.
+
+Resultado esperado:
+MongoDB conserva los documentos validos, combina informacion de colecciones referenciadas mediante $lookup y rechaza el documento que no cumple el esquema.

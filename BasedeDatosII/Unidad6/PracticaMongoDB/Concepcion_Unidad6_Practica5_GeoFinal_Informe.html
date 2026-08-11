@@ -1,0 +1,313 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Concepcion_Unidad6_Practica5_GeoFinal</title><style>
+    @page { size: letter; margin: 2.54cm; @top-right { content: counter(page); font-family: "Times New Roman", serif; font-size: 12pt; } }
+    body { color: #111; font-family: "Times New Roman", serif; font-size: 12pt; line-height: 2; margin: 0; }
+    .cover { align-items: center; display: flex; flex-direction: column; min-height: 21.5cm; page-break-after: always; text-align: center; }
+    .logo { height: 3.8cm; margin-top: 0.2cm; object-fit: contain; width: 3.8cm; }
+    .university { font-size: 14pt; font-weight: bold; margin-top: 0.35cm; text-transform: uppercase; }
+    .subtitle { font-size: 12pt; margin-top: 0.1cm; }
+    .title { font-size: 16pt; font-weight: bold; line-height: 1.5; margin-top: 3cm; text-transform: uppercase; }
+    .cover-info { line-height: 1.8; margin-top: 3cm; width: 100%; }
+    .cover p, li p { text-indent: 0; }
+    .place-date { margin-top: auto; }
+    h1 { font-size: 12pt; font-weight: bold; line-height: 2; margin: 0 0 12pt; text-align: center; }
+    h2 { font-size: 12pt; font-weight: bold; line-height: 2; margin: 12pt 0 0; text-align: left; }
+    p { margin: 0; text-indent: 1.27cm; }
+    ul, ol { margin-bottom: 0; margin-top: 0; }
+    code, pre { font-family: "Courier New", monospace; font-size: 8.5pt; }
+    pre { background: #f5f5f5; border: 1px solid #ddd; line-height: 1.25; margin: 8pt 0; padding: 8pt; white-space: pre-wrap; }
+    table { border-collapse: collapse; line-height: 1.35; margin: 10pt 0; width: 100%; }
+    th, td { border: 1px solid #333; padding: 6pt; text-align: left; vertical-align: top; }
+    figure { break-inside: avoid; margin: 14pt 0; page-break-inside: avoid; text-align: center; }
+    figure img { border: 1px solid #555; max-height: 15.8cm; max-width: 100%; object-fit: contain; }
+    figcaption { font-size: 10pt; line-height: 1.4; margin-top: 5pt; text-align: left; }
+    .page-break { page-break-before: always; }
+    </style></head><body>
+<section class="cover">
+    <img class="logo" src="../../Unidad1/PracticaMongoDB/assets/logo-uasd.jpg" alt="Logo de la Universidad Autonoma de Santo Domingo">
+    <div class="university">Universidad Autónoma de Santo Domingo</div>
+    <div class="subtitle">Primada de América</div>
+    <div class="title">Unidad 6<br>Práctica N.º 5 y Proyecto Final MongoDB</div>
+    <div class="cover-info">
+      <p><strong>Asignatura:</strong> Base de Datos II</p>
+      <p><strong>Docente:</strong> Bismark Montero</p>
+      <p><strong>Estudiante:</strong> Marlenis Concepción</p>
+      <p><strong>Tema:</strong> GeoJSON, índices geoespaciales, aggregation y backup</p>
+    </div>
+    <div class="place-date"><p>Santo Domingo, República Dominicana</p><p>11 de agosto de 2026</p></div>
+  </section>
+<main>
+<h1>Práctica N.º 5 - Índices Geoespaciales con MongoDB y GeoJSON</h1>
+<h2>Objetivo</h2><p>Integrar conceptos avanzados de MongoDB mediante datos GeoJSON, índices geoespaciales, consultas <code>$near</code> y <code>$geoWithin</code>, pipelines de aggregation y backup.</p>
+<h2>Entorno utilizado</h2><ul><li>MongoDB ejecutado con Docker.</li><li>Contenedor: <code>mongodb-uasd</code>.</li><li>Conexión local: <code>mongodb://127.0.0.1:*******</code>.</li><li>Base de datos: <code>unidad6_geo_final</code>.</li></ul>
+<h2>Lo solicitado y cómo se cumplió</h2><table><thead><tr><th>Requisito</th><th>Cumplimiento</th></tr></thead><tbody>
+<tr><td>GeoJSON.</td><td>Los lugares usan <code>location.type = Point</code> y coordenadas longitud/latitud.</td></tr>
+<tr><td>Índice geoespacial.</td><td>Se crea <code>idx_location_2dsphere</code>.</td></tr>
+<tr><td>Consultas geoespaciales.</td><td>Se ejecutan <code>$near</code> y <code>$geoWithin</code>.</td></tr>
+<tr><td>Aggregation.</td><td>Se usan <code>$group</code>, <code>$sort</code>, <code>$lookup</code>, <code>$unwind</code> y <code>$project</code>.</td></tr>
+<tr><td>Backup.</td><td>Se ejecuta <code>mongodump</code> desde Docker y se copia el backup localmente.</td></tr>
+</tbody></table>
+<h2>Evidencia del enunciado</h2>
+<figure><img src="assets/evidencias/evidencia-01.png" alt="Unidad 6"><figcaption><strong>Figura 1.</strong> Unidad 6: MongoDB avanzado, geoespacial, aggregation y backup.</figcaption></figure>
+<figure><img src="assets/evidencias/evidencia-02.png" alt="Proyecto final"><figcaption><strong>Figura 2.</strong> Enunciado de Práctica N.º 5 y Proyecto Final MongoDB.</figcaption></figure>
+<h2 class="page-break">Scripts utilizados</h2>
+<h2>Archivo: run-unidad6-practica5-docker.sh</h2><p>Ejecuta la carga, índice geoespacial, consultas GeoJSON y pipelines.</p><pre>#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;${BASH_SOURCE[0]}&quot;)&quot; &amp;&amp; pwd)&quot;
+SCRIPT_FILE=&quot;$SCRIPT_DIR/Concepcion_Unidad6_Practica5_GeoFinal.js&quot;
+CONTAINER_NAME=&quot;mongodb-uasd&quot;
+CONTAINER_SCRIPT=&quot;/tmp/unidad6-practica5-geofinal.js&quot;
+
+if ! docker ps --format &#x27;{{.Names}}&#x27; | grep -qx &quot;$CONTAINER_NAME&quot;; then
+  echo &quot;MongoDB Docker no esta corriendo.&quot;
+  echo &quot;Primero ejecuta:&quot;
+  echo &quot;  docker start $CONTAINER_NAME&quot;
+  exit 1
+fi
+
+echo &quot;============================================================&quot;
+echo &quot; Unidad 6 - Practica No. 5 - GeoJSON y Proyecto Final&quot;
+echo &quot; Estudiante: Marlenis Concepcion&quot;
+echo &quot; Docente: Bismark Montero&quot;
+echo &quot; Conexion: mongodb://127.0.0.1:*******&quot;
+echo &quot;============================================================&quot;
+echo
+
+docker cp &quot;$SCRIPT_FILE&quot; &quot;$CONTAINER_NAME:$CONTAINER_SCRIPT&quot;
+docker exec &quot;$CONTAINER_NAME&quot; mongosh --quiet &quot;$CONTAINER_SCRIPT&quot;
+
+echo
+echo &quot;============================================================&quot;
+echo &quot; Practica ejecutada. Ya puedes tomar captura de esta consola.&quot;
+echo &quot; En Compass conecta con: mongodb://127.0.0.1:*******&quot;
+echo &quot; Base de datos: unidad6_geo_final&quot;
+echo &quot; Colecciones: usuarios, posts, tags, lugares&quot;
+echo &quot;============================================================&quot;
+</pre>
+<h2>Archivo: run-unidad6-backup-docker.sh</h2><p>Ejecuta <code>mongodump</code> dentro del contenedor y copia el backup a la carpeta local ignorada por Git.</p><pre>#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;${BASH_SOURCE[0]}&quot;)&quot; &amp;&amp; pwd)&quot;
+CONTAINER_NAME=&quot;mongodb-uasd&quot;
+BACKUP_DIR=&quot;$SCRIPT_DIR/backup&quot;
+CONTAINER_BACKUP=&quot;/tmp/unidad6_backup&quot;
+
+if ! docker ps --format &#x27;{{.Names}}&#x27; | grep -qx &quot;$CONTAINER_NAME&quot;; then
+  echo &quot;MongoDB Docker no esta corriendo.&quot;
+  echo &quot;Primero ejecuta:&quot;
+  echo &quot;  docker start $CONTAINER_NAME&quot;
+  exit 1
+fi
+
+mkdir -p &quot;$BACKUP_DIR&quot;
+
+echo &quot;============================================================&quot;
+echo &quot; Unidad 6 - Backup MongoDB&quot;
+echo &quot; Base de datos: unidad6_geo_final&quot;
+echo &quot;============================================================&quot;
+
+docker exec &quot;$CONTAINER_NAME&quot; sh -lc &quot;rm -rf &#x27;$CONTAINER_BACKUP&#x27; &amp;&amp; mongodump --db unidad6_geo_final --out &#x27;$CONTAINER_BACKUP&#x27;&quot;
+docker cp &quot;$CONTAINER_NAME:$CONTAINER_BACKUP/unidad6_geo_final&quot; &quot;$BACKUP_DIR/&quot;
+
+echo &quot;Backup copiado en: /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad6/PracticaMongoDB/backup/unidad6_geo_final&quot;
+echo &quot;Para restaurar:&quot;
+echo &quot;docker cp backup/unidad6_geo_final mongodb-uasd:/tmp/unidad6_geo_final&quot;
+echo &quot;docker exec mongodb-uasd mongorestore --drop --db unidad6_geo_final_restored /tmp/unidad6_geo_final&quot;
+</pre>
+<h2>Archivo: Concepcion_Unidad6_Practica5_GeoFinal.js</h2><p>Contiene datos GeoJSON, creación de índice <code>2dsphere</code>, consultas geoespaciales y pipelines de aggregation.</p><pre>// Universidad Autonoma de Santo Domingo
+// Base de Datos II - Unidad 6
+// Practica No. 5 - Indices Geoespaciales con MongoDB y GeoJSON
+// Proyecto Final - MongoDB
+// Estudiante: Marlenis Concepcion
+// Docente: Bismark Montero
+
+use(&quot;unidad6_geo_final&quot;);
+
+print(&quot;\n============================================================&quot;);
+print(&quot;Unidad 6 - Practica No. 5 y Proyecto Final MongoDB&quot;);
+print(&quot;GeoJSON, indices 2dsphere, aggregation y backup&quot;);
+print(&quot;Base de datos: unidad6_geo_final&quot;);
+print(&quot;============================================================\n&quot;);
+
+print(&quot;Preparacion: limpiar colecciones&quot;);
+db.usuarios.drop();
+db.posts.drop();
+db.tags.drop();
+db.lugares.drop();
+
+print(&quot;\n1. Carga de datos geoespaciales y sociales&quot;);
+db.usuarios.insertMany([
+  { _id: ObjectId(&quot;66f600000000000000000001&quot;), username: &quot;ana&quot;, ciudad: &quot;Santo Domingo&quot;, rol: &quot;Estudiante&quot; },
+  { _id: ObjectId(&quot;66f600000000000000000002&quot;), username: &quot;carlos&quot;, ciudad: &quot;Santiago&quot;, rol: &quot;Docente&quot; },
+  { _id: ObjectId(&quot;66f600000000000000000003&quot;), username: &quot;laura&quot;, ciudad: &quot;La Vega&quot;, rol: &quot;Estudiante&quot; }
+]);
+
+db.tags.insertMany([
+  { _id: ObjectId(&quot;66f610000000000000000001&quot;), nombre: &quot;geo&quot; },
+  { _id: ObjectId(&quot;66f610000000000000000002&quot;), nombre: &quot;mongodb&quot; },
+  { _id: ObjectId(&quot;66f610000000000000000003&quot;), nombre: &quot;backup&quot; }
+]);
+
+db.posts.insertMany([
+  {
+    _id: ObjectId(&quot;66f620000000000000000001&quot;),
+    usuarioId: ObjectId(&quot;66f600000000000000000001&quot;),
+    titulo: &quot;Consulta geoespacial&quot;,
+    tags: [&quot;geo&quot;, &quot;mongodb&quot;],
+    visitas: 42,
+    creado: new Date(&quot;2026-08-10T13:00:00Z&quot;)
+  },
+  {
+    _id: ObjectId(&quot;66f620000000000000000002&quot;),
+    usuarioId: ObjectId(&quot;66f600000000000000000002&quot;),
+    titulo: &quot;Aggregation pipeline&quot;,
+    tags: [&quot;mongodb&quot;],
+    visitas: 31,
+    creado: new Date(&quot;2026-08-10T14:00:00Z&quot;)
+  },
+  {
+    _id: ObjectId(&quot;66f620000000000000000003&quot;),
+    usuarioId: ObjectId(&quot;66f600000000000000000001&quot;),
+    titulo: &quot;Backup y restore&quot;,
+    tags: [&quot;backup&quot;, &quot;mongodb&quot;],
+    visitas: 25,
+    creado: new Date(&quot;2026-08-10T15:00:00Z&quot;)
+  }
+]);
+
+db.lugares.insertMany([
+  {
+    nombre: &quot;Universidad Autonoma de Santo Domingo&quot;,
+    categoria: &quot;universidad&quot;,
+    location: { type: &quot;Point&quot;, coordinates: [-69.91997, 18.46077] }
+  },
+  {
+    nombre: &quot;Parque Mirador Sur&quot;,
+    categoria: &quot;parque&quot;,
+    location: { type: &quot;Point&quot;, coordinates: [-69.9497, 18.4318] }
+  },
+  {
+    nombre: &quot;Faro a Colon&quot;,
+    categoria: &quot;monumento&quot;,
+    location: { type: &quot;Point&quot;, coordinates: [-69.8735, 18.4801] }
+  },
+  {
+    nombre: &quot;Agora Mall&quot;,
+    categoria: &quot;comercial&quot;,
+    location: { type: &quot;Point&quot;, coordinates: [-69.9389, 18.4821] }
+  }
+]);
+printjson({
+  usuarios: db.usuarios.countDocuments(),
+  posts: db.posts.countDocuments(),
+  tags: db.tags.countDocuments(),
+  lugares: db.lugares.countDocuments()
+});
+
+print(&quot;\n2. Crear indice 2dsphere&quot;);
+db.lugares.createIndex({ location: &quot;2dsphere&quot; }, { name: &quot;idx_location_2dsphere&quot; });
+printjson(db.lugares.getIndexes());
+
+print(&quot;\n3. Consulta geoespacial $near&quot;);
+print(&quot;Lugares cercanos a la UASD en un radio de 5 km.&quot;);
+printjson(
+  db.lugares.find({
+    location: {
+      $near: {
+        $geometry: { type: &quot;Point&quot;, coordinates: [-69.91997, 18.46077] },
+        $maxDistance: 5000
+      }
+    }
+  }, { _id: 0, nombre: 1, categoria: 1, location: 1 }).toArray()
+);
+
+print(&quot;\n4. Consulta geoespacial $geoWithin&quot;);
+const radioKm = 6;
+const radioRadianes = radioKm / 6378.1;
+printjson(
+  db.lugares.find({
+    location: {
+      $geoWithin: {
+        $centerSphere: [[-69.91997, 18.46077], radioRadianes]
+      }
+    }
+  }, { _id: 0, nombre: 1, categoria: 1 }).toArray()
+);
+
+print(&quot;\n5. Aggregation pipeline: posts por usuario con $lookup&quot;);
+printjson(
+  db.posts.aggregate([
+    { $group: { _id: &quot;$usuarioId&quot;, totalPosts: { $sum: 1 }, visitas: { $sum: &quot;$visitas&quot; } } },
+    { $sort: { totalPosts: -1, visitas: -1 } },
+    { $lookup: { from: &quot;usuarios&quot;, localField: &quot;_id&quot;, foreignField: &quot;_id&quot;, as: &quot;autor&quot; } },
+    { $unwind: &quot;$autor&quot; },
+    { $project: { _id: 0, usuario: &quot;$autor.username&quot;, ciudad: &quot;$autor.ciudad&quot;, totalPosts: 1, visitas: 1 } }
+  ]).toArray()
+);
+
+print(&quot;\n6. Aggregation pipeline: conteo por tag&quot;);
+printjson(
+  db.posts.aggregate([
+    { $unwind: &quot;$tags&quot; },
+    { $group: { _id: &quot;$tags&quot;, total: { $sum: 1 }, visitas: { $sum: &quot;$visitas&quot; } } },
+    { $sort: { total: -1 } }
+  ]).toArray()
+);
+
+print(&quot;\n7. Proyeccion final&quot;);
+printjson(
+  db.lugares.aggregate([
+    { $project: { _id: 0, nombre: 1, categoria: 1, tipoGeoJSON: &quot;$location.type&quot;, coordenadas: &quot;$location.coordinates&quot; } },
+    { $sort: { nombre: 1 } }
+  ]).toArray()
+);
+
+print(&quot;\nResumen final Unidad 6&quot;);
+print(&quot;Se completo carga de datos, indice geoespacial, consultas GeoJSON y pipelines de agregacion.&quot;);
+</pre>
+<h2>Archivo: Concepcion_Unidad6_Practica5_GeoFinal.txt</h2><p>Resume el objetivo, comandos y resultado esperado.</p><pre>Practica No. 5 - Indices Geoespaciales con MongoDB y GeoJSON
+Proyecto Final - MongoDB
+
+Objetivo:
+Integrar conceptos avanzados de MongoDB mediante datos GeoJSON, indices geoespaciales, consultas $near y $geoWithin, pipelines de aggregation, $lookup y backup.
+
+Entorno:
+- MongoDB ejecutado con Docker.
+- Contenedor: mongodb-uasd.
+- Conexion local: mongodb://127.0.0.1:*******.
+- Base de datos: unidad6_geo_final.
+- Colecciones: usuarios, posts, tags, lugares.
+
+Comando para ejecutar la practica:
+
+docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad6/PracticaMongoDB
+./run-unidad6-practica5-docker.sh
+
+Comando para backup:
+
+./run-unidad6-backup-docker.sh
+
+Partes incluidas:
+1. Carga de datos sociales y lugares GeoJSON.
+2. Creacion de indice 2dsphere.
+3. Consulta geoespacial con $near.
+4. Consulta geoespacial con $geoWithin.
+5. Aggregation pipeline con $group, $sort, $lookup, $unwind y $project.
+6. Conteo por tags usando $unwind y $group.
+7. Proyeccion final de GeoJSON.
+8. Backup con mongodump desde Docker.
+
+Resultado esperado:
+MongoDB crea el indice geoespacial, devuelve lugares cercanos a la UASD, ejecuta pipelines de aggregation y genera un backup local de la base unidad6_geo_final.
+</pre>
+<h2 class="page-break">Scripts divididos para captura manual</h2>
+<h2>Parte 1: Entrar a la carpeta e iniciar MongoDB</h2><pre>cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad6/PracticaMongoDB
+docker start mongodb-uasd
+clear</pre>
+<h2>Parte 2: Ejecutar práctica geoespacial y aggregation</h2><pre>docker cp Concepcion_Unidad6_Practica5_GeoFinal.js mongodb-uasd:/tmp/unidad6-practica5-geofinal.js
+docker exec mongodb-uasd mongosh --quiet /tmp/unidad6-practica5-geofinal.js</pre>
+<h2>Parte 3: Ejecutar backup</h2><pre>./run-unidad6-backup-docker.sh</pre>
+<h2>Parte 4: Ver índices y resumen</h2><pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad6_geo_final"); printjson(db.lugares.getIndexes()); printjson({usuarios:db.usuarios.countDocuments(), posts:db.posts.countDocuments(), tags:db.tags.countDocuments(), lugares:db.lugares.countDocuments()})'</pre>
+<h2>Conclusión</h2><p>La práctica integra datos GeoJSON, índices geoespaciales, consultas espaciales, pipelines de aggregation y respaldo de información mediante <code>mongodump</code>, cumpliendo los componentes principales del proyecto final.</p>
+</main></body></html>

@@ -1,0 +1,35 @@
+Practica No. 5 - Indices Geoespaciales con MongoDB y GeoJSON
+Proyecto Final - MongoDB
+
+Objetivo:
+Integrar conceptos avanzados de MongoDB mediante datos GeoJSON, indices geoespaciales, consultas $near y $geoWithin, pipelines de aggregation, $lookup y backup.
+
+Entorno:
+- MongoDB ejecutado con Docker.
+- Contenedor: mongodb-uasd.
+- Conexion local: mongodb://127.0.0.1:*******.
+- Base de datos: unidad6_geo_final.
+- Colecciones: usuarios, posts, tags, lugares.
+
+Comando para ejecutar la practica:
+
+docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad6/PracticaMongoDB
+./run-unidad6-practica5-docker.sh
+
+Comando para backup:
+
+./run-unidad6-backup-docker.sh
+
+Partes incluidas:
+1. Carga de datos sociales y lugares GeoJSON.
+2. Creacion de indice 2dsphere.
+3. Consulta geoespacial con $near.
+4. Consulta geoespacial con $geoWithin.
+5. Aggregation pipeline con $group, $sort, $lookup, $unwind y $project.
+6. Conteo por tags usando $unwind y $group.
+7. Proyeccion final de GeoJSON.
+8. Backup con mongodump desde Docker.
+
+Resultado esperado:
+MongoDB crea el indice geoespacial, devuelve lugares cercanos a la UASD, ejecuta pipelines de aggregation y genera un backup local de la base unidad6_geo_final.

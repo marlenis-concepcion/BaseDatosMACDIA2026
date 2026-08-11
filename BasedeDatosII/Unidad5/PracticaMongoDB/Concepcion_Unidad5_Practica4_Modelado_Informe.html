@@ -1,0 +1,321 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Concepcion_Unidad5_Practica4_Modelado</title><style>
+    @page { size: letter; margin: 2.54cm; @top-right { content: counter(page); font-family: "Times New Roman", serif; font-size: 12pt; } }
+    body { color: #111; font-family: "Times New Roman", serif; font-size: 12pt; line-height: 2; margin: 0; }
+    .cover { align-items: center; display: flex; flex-direction: column; min-height: 21.5cm; page-break-after: always; text-align: center; }
+    .logo { height: 3.8cm; margin-top: 0.2cm; object-fit: contain; width: 3.8cm; }
+    .university { font-size: 14pt; font-weight: bold; margin-top: 0.35cm; text-transform: uppercase; }
+    .subtitle { font-size: 12pt; margin-top: 0.1cm; }
+    .title { font-size: 16pt; font-weight: bold; line-height: 1.5; margin-top: 3cm; text-transform: uppercase; }
+    .cover-info { line-height: 1.8; margin-top: 3cm; width: 100%; }
+    .cover p, li p { text-indent: 0; }
+    .place-date { margin-top: auto; }
+    h1 { font-size: 12pt; font-weight: bold; line-height: 2; margin: 0 0 12pt; text-align: center; }
+    h2 { font-size: 12pt; font-weight: bold; line-height: 2; margin: 12pt 0 0; text-align: left; }
+    p { margin: 0; text-indent: 1.27cm; }
+    ul, ol { margin-bottom: 0; margin-top: 0; }
+    code, pre { font-family: "Courier New", monospace; font-size: 8.5pt; }
+    pre { background: #f5f5f5; border: 1px solid #ddd; line-height: 1.25; margin: 8pt 0; padding: 8pt; white-space: pre-wrap; }
+    table { border-collapse: collapse; line-height: 1.35; margin: 10pt 0; width: 100%; }
+    th, td { border: 1px solid #333; padding: 6pt; text-align: left; vertical-align: top; }
+    figure { break-inside: avoid; margin: 14pt 0; page-break-inside: avoid; text-align: center; }
+    figure img { border: 1px solid #555; max-height: 15.8cm; max-width: 100%; object-fit: contain; }
+    figcaption { font-size: 10pt; line-height: 1.4; margin-top: 5pt; text-align: left; }
+    .page-break { page-break-before: always; }
+    </style></head><body>
+<section class="cover">
+    <img class="logo" src="../../Unidad1/PracticaMongoDB/assets/logo-uasd.jpg" alt="Logo de la Universidad Autonoma de Santo Domingo">
+    <div class="university">Universidad Autónoma de Santo Domingo</div>
+    <div class="subtitle">Primada de América</div>
+    <div class="title">Unidad 5<br>Práctica N.º 4 - Modelado de Datos</div>
+    <div class="cover-info">
+      <p><strong>Asignatura:</strong> Base de Datos II</p>
+      <p><strong>Docente:</strong> Bismark Montero</p>
+      <p><strong>Estudiante:</strong> Marlenis Concepción</p>
+      <p><strong>Tema:</strong> Embebido vs. Referenciado y validación de esquemas</p>
+    </div>
+    <div class="place-date"><p>Santo Domingo, República Dominicana</p><p>11 de agosto de 2026</p></div>
+  </section>
+<main>
+<h1>Práctica N.º 4 - Modelado de Datos: Embebido vs. Referenciado</h1>
+<h2>Objetivo</h2><p>Desarrollar un ejercicio aplicando una relación de tipo embebido y una relación de tipo referenciada, incluyendo documentos JSON, consultas de demostración, <code>$lookup</code> y validación de esquemas.</p>
+<h2>Entorno utilizado</h2><ul><li>MongoDB ejecutado con Docker.</li><li>Contenedor: <code>mongodb-uasd</code>.</li><li>Conexión local: <code>mongodb://127.0.0.1:*******</code>.</li><li>Base de datos: <code>unidad5_modelado</code>.</li></ul>
+<h2>Lo solicitado y cómo se cumplió</h2><table><thead><tr><th>Requisito</th><th>Cumplimiento</th></tr></thead><tbody>
+<tr><td>Relación embebida.</td><td><code>usuarios</code> contiene <code>perfil</code> y <code>direcciones</code>.</td></tr>
+<tr><td>Cardinalidad.</td><td><code>perfil</code> es 1:1 y <code>direcciones</code> es 1:N.</td></tr>
+<tr><td>Relación referenciada.</td><td><code>publicaciones</code> referencia <code>usuarios</code> y <code>etiquetas</code>.</td></tr>
+<tr><td><code>$lookup</code>.</td><td>Se combinan publicaciones con usuarios y etiquetas.</td></tr>
+<tr><td>Schema Validation.</td><td><code>inscripciones</code> exige campos obligatorios y rechaza documentos inválidos.</td></tr>
+</tbody></table>
+<h2>Evidencia del enunciado</h2>
+<figure><img src="assets/evidencias/evidencia-01.png" alt="Unidad 5"><figcaption><strong>Figura 1.</strong> Unidad 5: modelado de datos y validación de esquemas.</figcaption></figure>
+<figure><img src="assets/evidencias/evidencia-02.png" alt="Practica 4"><figcaption><strong>Figura 2.</strong> Enunciado de la Práctica N.º 4: embebido vs. referenciado.</figcaption></figure>
+<h2 class="page-break">Scripts utilizados</h2>
+<h2>Archivo: run-unidad5-practica4-docker.sh</h2><p>Ejecuta la práctica dentro del contenedor Docker y muestra la salida para evidencia.</p><pre>#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR=&quot;$(cd &quot;$(dirname &quot;${BASH_SOURCE[0]}&quot;)&quot; &amp;&amp; pwd)&quot;
+SCRIPT_FILE=&quot;$SCRIPT_DIR/Concepcion_Unidad5_Practica4_Modelado.js&quot;
+CONTAINER_NAME=&quot;mongodb-uasd&quot;
+CONTAINER_SCRIPT=&quot;/tmp/unidad5-practica4-modelado.js&quot;
+
+if ! docker ps --format &#x27;{{.Names}}&#x27; | grep -qx &quot;$CONTAINER_NAME&quot;; then
+  echo &quot;MongoDB Docker no esta corriendo.&quot;
+  echo &quot;Primero ejecuta:&quot;
+  echo &quot;  docker start $CONTAINER_NAME&quot;
+  exit 1
+fi
+
+echo &quot;============================================================&quot;
+echo &quot; Unidad 5 - Practica No. 4 - Modelado&quot;
+echo &quot; Estudiante: Marlenis Concepcion&quot;
+echo &quot; Docente: Bismark Montero&quot;
+echo &quot; Conexion: mongodb://127.0.0.1:*******&quot;
+echo &quot;============================================================&quot;
+echo
+
+docker cp &quot;$SCRIPT_FILE&quot; &quot;$CONTAINER_NAME:$CONTAINER_SCRIPT&quot;
+docker exec &quot;$CONTAINER_NAME&quot; mongosh --quiet &quot;$CONTAINER_SCRIPT&quot;
+
+echo
+echo &quot;============================================================&quot;
+echo &quot; Practica ejecutada. Ya puedes tomar captura de esta consola.&quot;
+echo &quot; En Compass conecta con: mongodb://127.0.0.1:*******&quot;
+echo &quot; Base de datos: unidad5_modelado&quot;
+echo &quot; Colecciones: usuarios, publicaciones, etiquetas, inscripciones&quot;
+echo &quot;============================================================&quot;
+</pre>
+<h2>Archivo: Concepcion_Unidad5_Practica4_Modelado.js</h2><p>Contiene documentos JSON, consultas embebidas, consultas referenciadas con <code>$lookup</code> y validación de esquema.</p><pre>// Universidad Autonoma de Santo Domingo
+// Base de Datos II - Unidad 5
+// Practica No. 4 - Modelado de Datos: Embebido vs. Referenciado
+// Estudiante: Marlenis Concepcion
+// Docente: Bismark Montero
+
+use(&quot;unidad5_modelado&quot;);
+
+print(&quot;\n============================================================&quot;);
+print(&quot;Unidad 5 - Practica No. 4&quot;);
+print(&quot;Modelado de Datos: Embebido vs. Referenciado&quot;);
+print(&quot;Base de datos: unidad5_modelado&quot;);
+print(&quot;============================================================\n&quot;);
+
+print(&quot;Preparacion: limpiar colecciones&quot;);
+db.usuarios.drop();
+db.publicaciones.drop();
+db.etiquetas.drop();
+db.inscripciones.drop();
+
+print(&quot;\n1. Escenario embebido: usuario con perfil y direcciones&quot;);
+db.createCollection(&quot;usuarios&quot;);
+db.usuarios.insertMany([
+  {
+    _id: ObjectId(&quot;66f500000000000000000001&quot;),
+    username: &quot;ana&quot;,
+    email: &quot;ana@example.com&quot;,
+    perfil: {
+      nombreCompleto: &quot;Ana Perez&quot;,
+      rol: &quot;Estudiante&quot;,
+      telefono: &quot;809-555-1001&quot;
+    },
+    direcciones: [
+      { tipo: &quot;casa&quot;, ciudad: &quot;Santo Domingo&quot;, sector: &quot;Gazcue&quot; },
+      { tipo: &quot;trabajo&quot;, ciudad: &quot;Santo Domingo&quot;, sector: &quot;Naco&quot; }
+    ]
+  },
+  {
+    _id: ObjectId(&quot;66f500000000000000000002&quot;),
+    username: &quot;carlos&quot;,
+    email: &quot;carlos@example.com&quot;,
+    perfil: {
+      nombreCompleto: &quot;Carlos Rodriguez&quot;,
+      rol: &quot;Docente&quot;,
+      telefono: &quot;809-555-1002&quot;
+    },
+    direcciones: [
+      { tipo: &quot;casa&quot;, ciudad: &quot;Santiago&quot;, sector: &quot;Los Jardines&quot; }
+    ]
+  }
+]);
+
+print(&quot;Consulta embebida: usuarios con direccion en Santo Domingo&quot;);
+printjson(
+  db.usuarios.find(
+    { &quot;direcciones.ciudad&quot;: &quot;Santo Domingo&quot; },
+    { _id: 0, username: 1, perfil: 1, direcciones: 1 }
+  ).toArray()
+);
+
+print(&quot;\nJustificacion embebida:&quot;);
+print(&quot;Se usa perfil embebido para relacion 1:1 y direcciones embebidas para 1:N de bajo crecimiento, porque se consultan junto al usuario.&quot;);
+
+print(&quot;\n2. Escenario referenciado: publicaciones, etiquetas e inscripciones&quot;);
+db.createCollection(&quot;etiquetas&quot;);
+db.etiquetas.insertMany([
+  { _id: ObjectId(&quot;66f510000000000000000001&quot;), nombre: &quot;nosql&quot; },
+  { _id: ObjectId(&quot;66f510000000000000000002&quot;), nombre: &quot;mongodb&quot; },
+  { _id: ObjectId(&quot;66f510000000000000000003&quot;), nombre: &quot;modelado&quot; },
+  { _id: ObjectId(&quot;66f510000000000000000004&quot;), nombre: &quot;validacion&quot; }
+]);
+
+db.createCollection(&quot;publicaciones&quot;);
+db.publicaciones.insertMany([
+  {
+    _id: ObjectId(&quot;66f520000000000000000001&quot;),
+    usuarioId: ObjectId(&quot;66f500000000000000000001&quot;),
+    titulo: &quot;Modelo embebido&quot;,
+    contenido: &quot;Ejemplo de perfil y direcciones dentro del usuario.&quot;,
+    etiquetasIds: [
+      ObjectId(&quot;66f510000000000000000001&quot;),
+      ObjectId(&quot;66f510000000000000000003&quot;)
+    ],
+    fecha: new Date(&quot;2026-08-10T10:00:00Z&quot;)
+  },
+  {
+    _id: ObjectId(&quot;66f520000000000000000002&quot;),
+    usuarioId: ObjectId(&quot;66f500000000000000000002&quot;),
+    titulo: &quot;Schema validation&quot;,
+    contenido: &quot;Ejemplo de validacion de documentos en MongoDB.&quot;,
+    etiquetasIds: [
+      ObjectId(&quot;66f510000000000000000002&quot;),
+      ObjectId(&quot;66f510000000000000000004&quot;)
+    ],
+    fecha: new Date(&quot;2026-08-10T11:00:00Z&quot;)
+  }
+]);
+
+print(&quot;Consulta referenciada con $lookup: publicaciones con usuario&quot;);
+printjson(
+  db.publicaciones.aggregate([
+    {
+      $lookup: {
+        from: &quot;usuarios&quot;,
+        localField: &quot;usuarioId&quot;,
+        foreignField: &quot;_id&quot;,
+        as: &quot;autor&quot;
+      }
+    },
+    { $unwind: &quot;$autor&quot; },
+    {
+      $project: {
+        _id: 0,
+        titulo: 1,
+        &quot;autor.username&quot;: 1,
+        &quot;autor.perfil.nombreCompleto&quot;: 1
+      }
+    }
+  ]).toArray()
+);
+
+print(&quot;\nConsulta referenciada N:M con $lookup pipeline: publicaciones con etiquetas&quot;);
+printjson(
+  db.publicaciones.aggregate([
+    {
+      $lookup: {
+        from: &quot;etiquetas&quot;,
+        let: { ids: &quot;$etiquetasIds&quot; },
+        pipeline: [
+          { $match: { $expr: { $in: [&quot;$_id&quot;, &quot;$$ids&quot;] } } },
+          { $project: { _id: 0, nombre: 1 } }
+        ],
+        as: &quot;etiquetas&quot;
+      }
+    },
+    { $project: { _id: 0, titulo: 1, etiquetas: 1 } }
+  ]).toArray()
+);
+
+print(&quot;\nJustificacion referenciada:&quot;);
+print(&quot;Se usan referencias para publicaciones y etiquetas porque una etiqueta puede aparecer en muchas publicaciones y una publicacion puede tener muchas etiquetas.&quot;);
+
+print(&quot;\n3. Schema Validation: coleccion inscripciones&quot;);
+db.createCollection(&quot;inscripciones&quot;, {
+  validator: {
+    $jsonSchema: {
+      bsonType: &quot;object&quot;,
+      required: [&quot;estudiante&quot;, &quot;asignatura&quot;, &quot;periodo&quot;],
+      properties: {
+        estudiante: { bsonType: &quot;string&quot;, minLength: 3 },
+        asignatura: { bsonType: &quot;string&quot;, minLength: 3 },
+        periodo: { bsonType: &quot;string&quot; },
+        creditos: { bsonType: &quot;int&quot;, minimum: 1 },
+        activa: { bsonType: &quot;bool&quot; }
+      }
+    }
+  },
+  validationLevel: &quot;strict&quot;,
+  validationAction: &quot;error&quot;
+});
+
+print(&quot;Insercion valida:&quot;);
+db.inscripciones.insertOne({
+  estudiante: &quot;Marlenis Concepcion&quot;,
+  asignatura: &quot;Base de Datos II&quot;,
+  periodo: &quot;2026-02&quot;,
+  creditos: NumberInt(4),
+  activa: true
+});
+printjson(db.inscripciones.find({}, { _id: 0 }).toArray());
+
+print(&quot;\nInsercion invalida: falta asignatura y creditos no es entero valido&quot;);
+try {
+  db.inscripciones.insertOne({
+    estudiante: &quot;MC&quot;,
+    periodo: &quot;2026-02&quot;,
+    creditos: &quot;cuatro&quot;,
+    activa: true
+  });
+} catch (error) {
+  print(&quot;Error esperado por validacion de esquema:&quot;);
+  printjson({
+    name: error.name,
+    code: error.code,
+    message: error.message
+  });
+}
+
+print(&quot;\nResumen final Unidad 5&quot;);
+printjson({
+  usuarios: db.usuarios.countDocuments(),
+  publicaciones: db.publicaciones.countDocuments(),
+  etiquetas: db.etiquetas.countDocuments(),
+  inscripciones: db.inscripciones.countDocuments()
+});
+</pre>
+<h2>Archivo: Concepcion_Unidad5_Practica4_Modelado.txt</h2><p>Resume el objetivo, entorno, comandos y resultado esperado.</p><pre>Practica No. 4 - Modelado de Datos: Embebido vs. Referenciado
+
+Objetivo:
+Desarrollar un ejercicio aplicando una relacion de tipo embebido y una relacion de tipo referenciada, incluyendo documentos JSON, consultas que demuestren el funcionamiento de cada modelo, uso de $lookup y validacion de esquemas.
+
+Entorno:
+- MongoDB ejecutado con Docker.
+- Contenedor: mongodb-uasd.
+- Conexion local: mongodb://127.0.0.1:*******.
+- Base de datos: unidad5_modelado.
+- Colecciones: usuarios, publicaciones, etiquetas, inscripciones.
+
+Comando para ejecutar:
+
+docker start mongodb-uasd
+cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad5/PracticaMongoDB
+./run-unidad5-practica4-docker.sh
+
+Partes incluidas:
+1. Modelo embebido: usuario con perfil 1:1 y direcciones 1:N.
+2. Consulta sobre documento embebido: direcciones.ciudad = Santo Domingo.
+3. Modelo referenciado: publicaciones relacionadas con usuarios y etiquetas.
+4. $lookup publicaciones -&gt; usuarios.
+5. $lookup pipeline publicaciones -&gt; etiquetas.
+6. Schema Validation en la coleccion inscripciones.
+7. Insercion valida y rechazo de insercion invalida.
+
+Resultado esperado:
+MongoDB conserva los documentos validos, combina informacion de colecciones referenciadas mediante $lookup y rechaza el documento que no cumple el esquema.
+</pre>
+<h2 class="page-break">Scripts divididos para captura manual</h2>
+<h2>Parte 1: Entrar a la carpeta e iniciar MongoDB</h2><pre>cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad5/PracticaMongoDB
+docker start mongodb-uasd
+clear</pre>
+<h2>Parte 2: Copiar y ejecutar script completo</h2><pre>docker cp Concepcion_Unidad5_Practica4_Modelado.js mongodb-uasd:/tmp/unidad5-practica4-modelado.js
+docker exec mongodb-uasd mongosh --quiet /tmp/unidad5-practica4-modelado.js</pre>
+<h2>Parte 3: Ver resumen final</h2><pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad5_modelado"); printjson({usuarios:db.usuarios.countDocuments(), publicaciones:db.publicaciones.countDocuments(), etiquetas:db.etiquetas.countDocuments(), inscripciones:db.inscripciones.countDocuments()})'</pre>
+<h2>Conclusión</h2><p>La práctica evidencia cuándo conviene usar documentos embebidos y cuándo conviene usar referencias. Además, demuestra el uso de <code>$lookup</code> y la protección de calidad de datos mediante validación de esquemas.</p>
+</main></body></html>
