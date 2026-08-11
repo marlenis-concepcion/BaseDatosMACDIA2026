@@ -16,6 +16,9 @@ BasedeDatosII/Unidad5/PracticaMongoDB/assets/evidencias/*.png
 BasedeDatosII/Unidad6/PracticaMongoDB/Concepcion_Unidad6_Practica5_GeoFinal.pdf
 BasedeDatosII/Unidad6/PracticaMongoDB/assets/evidencias/*.png
 BasedeDatosII/Unidad6/PracticaMongoDB/backup/
+*.pdf
+*.doc
+*.docx
 .DS_Store
 downloads/
 tools/
