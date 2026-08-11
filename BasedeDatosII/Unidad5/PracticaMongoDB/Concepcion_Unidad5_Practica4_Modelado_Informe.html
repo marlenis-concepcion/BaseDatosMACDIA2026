@@ -310,12 +310,43 @@ Partes incluidas:
 Resultado esperado:
 MongoDB conserva los documentos validos, combina informacion de colecciones referenciadas mediante $lookup y rechaza el documento que no cumple el esquema.
 </pre>
-<h2 class="page-break">Scripts divididos para captura manual</h2>
-<h2>Parte 1: Entrar a la carpeta e iniciar MongoDB</h2><pre>cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad5/PracticaMongoDB
+<h2 class="page-break">Scripts divididos y evidencias de la corrida</h2>
+<p>La práctica se ejecutó por partes para facilitar la captura de pantalla. Después de cada bloque se incluye la evidencia correspondiente tomada de la consola.</p>
+
+<h2>Parte 1: Entrar a la carpeta e iniciar MongoDB</h2>
+<pre>cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad5/PracticaMongoDB
 docker start mongodb-uasd
 clear</pre>
-<h2>Parte 2: Copiar y ejecutar script completo</h2><pre>docker cp Concepcion_Unidad5_Practica4_Modelado.js mongodb-uasd:/tmp/unidad5-practica4-modelado.js
-docker exec mongodb-uasd mongosh --quiet /tmp/unidad5-practica4-modelado.js</pre>
-<h2>Parte 3: Ver resumen final</h2><pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad5_modelado"); printjson({usuarios:db.usuarios.countDocuments(), publicaciones:db.publicaciones.countDocuments(), etiquetas:db.etiquetas.countDocuments(), inscripciones:db.inscripciones.countDocuments()})'</pre>
+<figure><img src="assets/evidencias/evidencia-01.png" alt="Evidencia 1"><figcaption><strong>Figura 1.</strong> Preparación del entorno de trabajo para la práctica de Unidad 5.</figcaption></figure>
+
+<h2>Parte 2: Crear modelo embebido y consultar</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad5_modelado"); db.usuarios.drop(); db.usuarios.insertMany([{_id:ObjectId("66f500000000000000000001"), username:"ana", email:"ana@example.com", perfil:{nombreCompleto:"Ana Perez", rol:"Estudiante", telefono:"809-555-1001"}, direcciones:[{tipo:"casa", ciudad:"Santo Domingo", sector:"Gazcue"}, {tipo:"trabajo", ciudad:"Santo Domingo", sector:"Naco"}]}, {_id:ObjectId("66f500000000000000000002"), username:"carlos", email:"carlos@example.com", perfil:{nombreCompleto:"Carlos Rodriguez", rol:"Docente", telefono:"809-555-1002"}, direcciones:[{tipo:"casa", ciudad:"Santiago", sector:"Los Jardines"}]}]); print("Modelo embebido creado"); printjson(db.usuarios.find({"direcciones.ciudad":"Santo Domingo"}, {_id:0, username:1, perfil:1, direcciones:1}).toArray())'</pre>
+<figure><img src="assets/evidencias/evidencia-02.png" alt="Evidencia 2"><figcaption><strong>Figura 2.</strong> Creación del modelo embebido y consulta sobre el arreglo <code>direcciones</code>.</figcaption></figure>
+
+<h2>Parte 3: Crear modelo referenciado</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad5_modelado"); db.publicaciones.drop(); db.etiquetas.drop(); db.etiquetas.insertMany([{_id:ObjectId("66f510000000000000000001"), nombre:"nosql"}, {_id:ObjectId("66f510000000000000000002"), nombre:"mongodb"}, {_id:ObjectId("66f510000000000000000003"), nombre:"modelado"}, {_id:ObjectId("66f510000000000000000004"), nombre:"validacion"}]); db.publicaciones.insertMany([{_id:ObjectId("66f520000000000000000001"), usuarioId:ObjectId("66f500000000000000000001"), titulo:"Modelo embebido", contenido:"Ejemplo de perfil y direcciones dentro del usuario.", etiquetasIds:[ObjectId("66f510000000000000000001"), ObjectId("66f510000000000000000003")], fecha:new Date("2026-08-10T10:00:00Z")}, {_id:ObjectId("66f520000000000000000002"), usuarioId:ObjectId("66f500000000000000000002"), titulo:"Schema validation", contenido:"Ejemplo de validacion de documentos en MongoDB.", etiquetasIds:[ObjectId("66f510000000000000000002"), ObjectId("66f510000000000000000004")], fecha:new Date("2026-08-10T11:00:00Z")}]); print("Modelo referenciado creado"); printjson({publicaciones:db.publicaciones.countDocuments(), etiquetas:db.etiquetas.countDocuments()})'</pre>
+<figure><img src="assets/evidencias/evidencia-03.png" alt="Evidencia 3"><figcaption><strong>Figura 3.</strong> Creación de colecciones referenciadas <code>publicaciones</code> y <code>etiquetas</code>.</figcaption></figure>
+
+<h2>Parte 4: Consulta $lookup publicaciones con usuario</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad5_modelado"); db.publicaciones.aggregate([{$lookup:{from:"usuarios", localField:"usuarioId", foreignField:"_id", as:"autor"}}, {$unwind:"$autor"}, {$project:{_id:0, titulo:1, "autor.username":1, "autor.perfil.nombreCompleto":1}}]).toArray()'</pre>
+<figure><img src="assets/evidencias/evidencia-04.png" alt="Evidencia 4"><figcaption><strong>Figura 4.</strong> Resultado del <code>$lookup</code> que combina publicaciones con su usuario autor.</figcaption></figure>
+
+<h2>Parte 5: Consulta $lookup publicaciones con etiquetas</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad5_modelado"); db.publicaciones.aggregate([{$lookup:{from:"etiquetas", let:{ids:"$etiquetasIds"}, pipeline:[{$match:{$expr:{$in:["$_id","$$ids"]}}}, {$project:{_id:0, nombre:1}}], as:"etiquetas"}}, {$project:{_id:0, titulo:1, etiquetas:1}}]).toArray()'</pre>
+<figure><img src="assets/evidencias/evidencia-05.png" alt="Evidencia 5"><figcaption><strong>Figura 5.</strong> Resultado del <code>$lookup</code> con pipeline para resolver relación N:M con etiquetas.</figcaption></figure>
+
+<h2>Parte 6: Crear Schema Validation</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad5_modelado"); db.inscripciones.drop(); db.createCollection("inscripciones", {validator:{$jsonSchema:{bsonType:"object", required:["estudiante","asignatura","periodo"], properties:{estudiante:{bsonType:"string", minLength:3}, asignatura:{bsonType:"string", minLength:3}, periodo:{bsonType:"string"}, creditos:{bsonType:"int", minimum:1}, activa:{bsonType:"bool"}}}}, validationLevel:"strict", validationAction:"error"}); print("Coleccion inscripciones creada con Schema Validation")'</pre>
+<figure><img src="assets/evidencias/evidencia-06.png" alt="Evidencia 6"><figcaption><strong>Figura 6.</strong> Creación de la colección <code>inscripciones</code> con validación de esquema.</figcaption></figure>
+
+<h2>Parte 7: Inserción válida e inserción inválida</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad5_modelado"); db.inscripciones.insertOne({estudiante:"Marlenis Concepcion", asignatura:"Base de Datos II", periodo:"2026-02", creditos:NumberInt(4), activa:true}); print("Insercion valida realizada"); printjson(db.inscripciones.find({}, {_id:0}).toArray())'
+
+docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad5_modelado"); try { db.inscripciones.insertOne({estudiante:"MC", periodo:"2026-02", creditos:"cuatro", activa:true}); } catch(e) { print("Error esperado por validacion de esquema"); printjson({name:e.name, code:e.code, message:e.message}); }'</pre>
+<figure><img src="assets/evidencias/evidencia-07.png" alt="Evidencia 7"><figcaption><strong>Figura 7.</strong> Inserción válida y rechazo de documento inválido por incumplir el esquema.</figcaption></figure>
+
+<h2>Parte 8: Resumen final</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad5_modelado"); printjson({usuarios:db.usuarios.countDocuments(), publicaciones:db.publicaciones.countDocuments(), etiquetas:db.etiquetas.countDocuments(), inscripciones:db.inscripciones.countDocuments()})'</pre>
+<figure><img src="assets/evidencias/evidencia-08.png" alt="Evidencia 8"><figcaption><strong>Figura 8.</strong> Resumen final de documentos conservados en cada colección.</figcaption></figure>
 <h2>Conclusión</h2><p>La práctica evidencia cuándo conviene usar documentos embebidos y cuándo conviene usar referencias. Además, demuestra el uso de <code>$lookup</code> y la protección de calidad de datos mediante validación de esquemas.</p>
 </main></body></html>
