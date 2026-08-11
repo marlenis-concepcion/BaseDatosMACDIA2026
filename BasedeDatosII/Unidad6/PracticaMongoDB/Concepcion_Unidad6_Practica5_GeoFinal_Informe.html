@@ -301,13 +301,49 @@ Partes incluidas:
 Resultado esperado:
 MongoDB crea el indice geoespacial, devuelve lugares cercanos a la UASD, ejecuta pipelines de aggregation y genera un backup local de la base unidad6_geo_final.
 </pre>
-<h2 class="page-break">Scripts divididos para captura manual</h2>
-<h2>Parte 1: Entrar a la carpeta e iniciar MongoDB</h2><pre>cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad6/PracticaMongoDB
+<h2 class="page-break">Scripts divididos y evidencias de la corrida</h2>
+<p>La práctica final se ejecutó por partes para poder capturar cada resultado importante. Después de cada bloque se incluye la evidencia correspondiente.</p>
+
+<h2>Parte 1: Entrar a la carpeta e iniciar MongoDB</h2>
+<pre>cd /PATH/BaseDatosMACDIA2026/BasedeDatosII/Unidad6/PracticaMongoDB
 docker start mongodb-uasd
 clear</pre>
-<h2>Parte 2: Ejecutar práctica geoespacial y aggregation</h2><pre>docker cp Concepcion_Unidad6_Practica5_GeoFinal.js mongodb-uasd:/tmp/unidad6-practica5-geofinal.js
-docker exec mongodb-uasd mongosh --quiet /tmp/unidad6-practica5-geofinal.js</pre>
-<h2>Parte 3: Ejecutar backup</h2><pre>./run-unidad6-backup-docker.sh</pre>
-<h2>Parte 4: Ver índices y resumen</h2><pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad6_geo_final"); printjson(db.lugares.getIndexes()); printjson({usuarios:db.usuarios.countDocuments(), posts:db.posts.countDocuments(), tags:db.tags.countDocuments(), lugares:db.lugares.countDocuments()})'</pre>
+<figure><img src="assets/evidencias/evidencia-01.png" alt="Evidencia 1"><figcaption><strong>Figura 1.</strong> Preparación del entorno para ejecutar la práctica final de Unidad 6.</figcaption></figure>
+
+<h2>Parte 2: Copiar script al contenedor</h2>
+<pre>docker cp Concepcion_Unidad6_Practica5_GeoFinal.js mongodb-uasd:/tmp/unidad6-practica5-geofinal.js</pre>
+<figure><img src="assets/evidencias/evidencia-02.png" alt="Evidencia 2"><figcaption><strong>Figura 2.</strong> Copia del script principal al contenedor Docker de MongoDB.</figcaption></figure>
+
+<h2>Parte 3: Carga de datos y creación del índice geoespacial</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet /tmp/unidad6-practica5-geofinal.js</pre>
+<figure><img src="assets/evidencias/evidencia-03.png" alt="Evidencia 3"><figcaption><strong>Figura 3.</strong> Carga inicial de colecciones y creación del índice <code>2dsphere</code>.</figcaption></figure>
+
+<h2>Parte 4: Consulta geoespacial $near</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad6_geo_final"); printjson(db.lugares.find({location:{$near:{$geometry:{type:"Point",coordinates:[-69.91997,18.46077]},$maxDistance:5000}}},{_id:0,nombre:1,categoria:1,location:1}).toArray())'</pre>
+<figure><img src="assets/evidencias/evidencia-04.png" alt="Evidencia 4"><figcaption><strong>Figura 4.</strong> Resultado de la consulta <code>$near</code> para lugares cercanos a la UASD.</figcaption></figure>
+
+<h2>Parte 5: Consulta geoespacial $geoWithin</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad6_geo_final"); const radioKm=6; const radioRadianes=radioKm/6378.1; printjson(db.lugares.find({location:{$geoWithin:{$centerSphere:[[-69.91997,18.46077],radioRadianes]}}},{_id:0,nombre:1,categoria:1}).toArray())'</pre>
+<figure><img src="assets/evidencias/evidencia-05.png" alt="Evidencia 5"><figcaption><strong>Figura 5.</strong> Resultado de la consulta <code>$geoWithin</code> usando un radio expresado con <code>$centerSphere</code>.</figcaption></figure>
+
+<h2>Parte 6: Aggregation pipeline con $lookup</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad6_geo_final"); printjson(db.posts.aggregate([{$group:{_id:"$usuarioId",totalPosts:{$sum:1},visitas:{$sum:"$visitas"}}},{$sort:{totalPosts:-1,visitas:-1}},{$lookup:{from:"usuarios",localField:"_id",foreignField:"_id",as:"autor"}},{$unwind:"$autor"},{$project:{_id:0,usuario:"$autor.username",ciudad:"$autor.ciudad",totalPosts:1,visitas:1}}]).toArray())'</pre>
+<figure><img src="assets/evidencias/evidencia-06.png" alt="Evidencia 6"><figcaption><strong>Figura 6.</strong> Pipeline que agrupa posts por usuario y combina datos del autor con <code>$lookup</code>.</figcaption></figure>
+
+<h2>Parte 7: Aggregation pipeline por tags</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad6_geo_final"); printjson(db.posts.aggregate([{$unwind:"$tags"},{$group:{_id:"$tags",total:{$sum:1},visitas:{$sum:"$visitas"}}},{$sort:{total:-1}}]).toArray())'</pre>
+<figure><img src="assets/evidencias/evidencia-07.png" alt="Evidencia 7"><figcaption><strong>Figura 7.</strong> Conteo de publicaciones por etiqueta usando <code>$unwind</code> y <code>$group</code>.</figcaption></figure>
+
+<h2>Parte 8: Proyección final de GeoJSON</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad6_geo_final"); printjson(db.lugares.aggregate([{$project:{_id:0,nombre:1,categoria:1,tipoGeoJSON:"$location.type",coordenadas:"$location.coordinates"}},{$sort:{nombre:1}}]).toArray())'</pre>
+<figure><img src="assets/evidencias/evidencia-08.png" alt="Evidencia 8"><figcaption><strong>Figura 8.</strong> Proyección final de lugares con tipo GeoJSON y coordenadas.</figcaption></figure>
+
+<h2>Parte 9: Backup con mongodump</h2>
+<pre>./run-unidad6-backup-docker.sh</pre>
+<figure><img src="assets/evidencias/evidencia-09.png" alt="Evidencia 9"><figcaption><strong>Figura 9.</strong> Ejecución del backup con <code>mongodump</code> y copia del respaldo a la carpeta local.</figcaption></figure>
+
+<h2>Parte 10: Ver índices y resumen final</h2>
+<pre>docker exec mongodb-uasd mongosh --quiet --eval 'use("unidad6_geo_final"); printjson(db.lugares.getIndexes()); printjson({usuarios:db.usuarios.countDocuments(), posts:db.posts.countDocuments(), tags:db.tags.countDocuments(), lugares:db.lugares.countDocuments()})'</pre>
+<figure><img src="assets/evidencias/evidencia-10.png" alt="Evidencia 10"><figcaption><strong>Figura 10.</strong> Verificación final del índice geoespacial y conteo de documentos por colección.</figcaption></figure>
 <h2>Conclusión</h2><p>La práctica integra datos GeoJSON, índices geoespaciales, consultas espaciales, pipelines de aggregation y respaldo de información mediante <code>mongodump</code>, cumpliendo los componentes principales del proyecto final.</p>
 </main></body></html>
