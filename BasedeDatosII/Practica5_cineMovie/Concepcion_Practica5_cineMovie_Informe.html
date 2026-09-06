@@ -1,0 +1,75 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Concepcion_Practica5_cineMovie</title><style>
+    @page { size: letter; margin: 2.54cm; @top-right { content: counter(page); font-family: "Times New Roman", serif; font-size: 12pt; } }
+    body { color: #111; font-family: "Times New Roman", serif; font-size: 12pt; line-height: 2; margin: 0; }
+    .cover { align-items: center; display: flex; flex-direction: column; min-height: 21.5cm; page-break-after: always; text-align: center; }
+    .logo { height: 3.8cm; margin-top: 0.2cm; object-fit: contain; width: 3.8cm; }
+    .university { font-size: 14pt; font-weight: bold; margin-top: 0.35cm; text-transform: uppercase; }
+    .subtitle { font-size: 12pt; margin-top: 0.1cm; }
+    .title { font-size: 16pt; font-weight: bold; line-height: 1.5; margin-top: 3cm; text-transform: uppercase; }
+    .cover-info { line-height: 1.8; margin-top: 3cm; width: 100%; }
+    .cover p, li p { text-indent: 0; }
+    .place-date { margin-top: auto; }
+    h1 { font-size: 12pt; font-weight: bold; line-height: 2; margin: 0 0 12pt; text-align: center; }
+    h2 { font-size: 12pt; font-weight: bold; line-height: 2; margin: 12pt 0 0; text-align: left; }
+    p { margin: 0; text-indent: 1.27cm; }
+    ul, ol { margin-bottom: 0; margin-top: 0; }
+    code, pre { font-family: "Courier New", monospace; font-size: 8.5pt; }
+    pre { background: #f5f5f5; border: 1px solid #ddd; line-height: 1.25; margin: 8pt 0; padding: 8pt; white-space: pre-wrap; }
+    table { border-collapse: collapse; line-height: 1.35; margin: 10pt 0; width: 100%; }
+    th, td { border: 1px solid #333; padding: 6pt; text-align: left; vertical-align: top; }
+    figure { break-inside: avoid; margin: 14pt 0; page-break-inside: avoid; text-align: center; }
+    figure img { border: 1px solid #555; max-height: 15.8cm; max-width: 100%; object-fit: contain; }
+    figcaption { font-size: 10pt; line-height: 1.4; margin-top: 5pt; text-align: left; }
+    .page-break { page-break-before: always; }
+    </style></head><body><section class="cover">
+    <img class="logo" src="assets/logo-uasd.jpg" alt="Logo de la Universidad Autonoma de Santo Domingo">
+    <div class="university">Universidad Autónoma de Santo Domingo</div>
+    <div class="subtitle">Primada de América</div>
+    <div class="title">Práctica N.º 5<br>cineMovie</div>
+    <div class="cover-info">
+      <p><strong>Asignatura:</strong> Base de Datos II</p>
+      <p><strong>Docente:</strong> Bismark Montero</p>
+      <p><strong>Estudiante:</strong> Marlenis Concepción</p>
+      <p><strong>Tema:</strong> Actualización de documentos en MongoDB</p>
+    </div>
+    <div class="place-date"><p>Santo Domingo, República Dominicana</p><p>6 de septiembre de 2026</p></div>
+  </section><main><h1>Práctica N.º 5: cineMovie</h1><h2>Objetivo</h2><p>Aplicar operaciones de reemplazo, actualización, incremento, límites de fechas, multiplicación, renombrado, eliminación de campos e inserción condicional en la colección Movie02 de la base cineMovie.</p><h2>Datos y criterios</h2><p>Se parte de las siete películas del adjunto. Las fechas se almacenan como BSON Date y los ejercicios se ejecutan en el orden indicado. Se conserva literalmente el contenido solicitado para mv207; los idiomas se representan mediante un arreglo. El campo correcto es movieID, con m minúscula.</p><h2>Estado de validación</h2><p>Script y dataset revisados estáticamente. Ejecución en MongoDB pendiente: Docker y mongosh no están disponibles en el entorno de preparación. Los resultados siguientes son esperados y no constituyen capturas de ejecución.</p><h2>1. Reemplazar la película mv207</h2><p>replaceOne sustituye el documento completo y conserva su _id. Se transcribe literalmente la segunda productora del enunciado, aunque contiene un nombre vacío y un país aparentemente mal escrito.</p><pre>db.Movie02.replaceOne({ movieID: &quot;mv207&quot; }, {
+  movieID: &quot;mv207&quot;,
+  title: &quot;Indiana Jones and the Kingdom of the Crystal Skull&quot;,
+  runtime: 162, voteAverage: 7.2,
+  dateRelease: new Date(&quot;2008-05-21&quot;),
+  dateExpired: new Date(&quot;2027-05-21&quot;),
+  lastView: new Date(&quot;2023-09-15&quot;), isView: false,
+  productionCompany: [
+    { name: &quot;Lucasfilm&quot;, country: &quot;United States&quot; },
+    { name: &quot;&quot;, country: &quot;UnitedParamount Pictures States&quot; }
+  ]
+});</pre><h2>2. Actualizar las productoras de mv206</h2><p>Se reemplaza el arreglo de cadenas por un arreglo de documentos con nombre y país.</p><pre>db.Movie02.updateOne({ movieID: &quot;mv206&quot; }, { $set: {
+  productionCompany: [
+    { name: &quot;Lions Gate Films&quot;, country: &quot;United States&quot; },
+    { name: &quot;Got Films&quot;, country: &quot;United States&quot; },
+    { name: &quot;Twisted Pictures&quot;, country: &quot;United States&quot; }
+  ]
+} });</pre><h2>3. Agregar los idiomas</h2><p>Se representan los dos idiomas como elementos de un arreglo en las siete películas.</p><pre>db.Movie02.updateMany({}, { $set: { idioma: [&quot;English&quot;, &quot;Spanish&quot;] } });</pre><h2>4. Disminuir la valoración y agregar el impuesto</h2><p>Se necesitan dos actualizaciones: la disminución afecta solo a mv203, mv205 y mv206; el impuesto se agrega a todas las películas.</p><pre>db.Movie02.updateMany({ voteAverage: { $lt: 7 } }, { $inc: { voteAverage: -1 } });
+db.Movie02.updateMany({}, { $set: { &quot;%tax&quot;: 0.1 } });</pre><h2>5. Limitar la fecha de estreno</h2><p>mv207 cambia del 21 al 1 de mayo de 2008. El filtro selecciona únicamente fechas superiores al límite.</p><pre>db.Movie02.updateMany(
+  { dateRelease: { $gt: new Date(&quot;2008-05-01&quot;) } },
+  { $min: { dateRelease: new Date(&quot;2008-05-01&quot;) } }
+);</pre><h2>6. Establecer una fecha mínima de vencimiento</h2><p>mv202 cambia de 2015-12-01 a 2016-12-01.</p><pre>db.Movie02.updateMany(
+  { dateExpired: { $lt: new Date(&quot;2016-12-01&quot;) } },
+  { $max: { dateExpired: new Date(&quot;2016-12-01&quot;) } }
+);</pre><h2>7. Multiplicar el impuesto por dos</h2><p>El impuesto pasa de 0.1 a 0.2 en las siete películas.</p><pre>db.Movie02.updateMany({}, { $mul: { &quot;%tax&quot;: 2 } });</pre><h2>8. Renombrar los campos</h2><p>Los valores se conservan con los nuevos nombres.</p><pre>db.Movie02.updateMany({}, { $rename: {
+  idioma: &quot;language&quot;, &quot;%tax&quot;: &quot;percentTax&quot;
+} });</pre><h2>9. Eliminar los campos indicados</h2><p>Se eliminan los tres campos en las siete películas.</p><pre>db.Movie02.updateMany({}, { $unset: {
+  productionCompany: &quot;&quot;, language: &quot;&quot;, percentTax: &quot;&quot;
+} });</pre><h2>10. Actualizar la última visualización</h2><p>lastView recibe la fecha y hora de ejecución como BSON Date; isView queda en true.</p><pre>db.Movie02.updateMany({}, {
+  $currentDate: { lastView: { $type: &quot;date&quot; } },
+  $set: { isView: true }
+});</pre><h2>11. Insertar King Kong solo si no existe</h2><p>upsert inserta el documento cuando no existe; $setOnInsert conserva una película ya existente. Se utiliza movieID, respetando las mayúsculas del campo real. Como se inserta después del paso 10, King Kong mantiene isView: false y su lastView original.</p><pre>db.Movie02.updateOne({ movieID: &quot;mv208&quot; }, {
+  $setOnInsert: {
+    movieID: &quot;mv208&quot;, title: &quot;King Kong&quot;, runtime: 187, voteAverage: 6.6,
+    dateRelease: new Date(&quot;2005-12-15&quot;),
+    dateExpired: new Date(&quot;2030-01-01&quot;),
+    lastView: new Date(&quot;2023-08-01&quot;), isView: false
+  }
+}, { upsert: true });</pre><h2>Resultado final esperado</h2><p>Ocho películas: las siete iniciales quedan con isView en true y lastView actualizado al ejecutar. King Kong se agrega al final con isView en false y lastView de 2023-08-01. Ninguna conserva productionCompany, idioma, language, %tax ni percentTax.</p><table><tr><th>movieID</th><th>Película</th><th>voteAverage</th><th>Cambio de fecha</th></tr><tr><td>mv201</td><td>Star Wars</td><td>8.1</td><td>Sin cambio</td></tr><tr><td>mv202</td><td>Pirates of the Caribbean</td><td>7.7</td><td>dateExpired: 2016-12-01</td></tr><tr><td>mv203</td><td>The Simpsons Movie</td><td>5.9</td><td>Sin cambio</td></tr><tr><td>mv204</td><td>Gladiator</td><td>7.9</td><td>Sin cambio</td></tr><tr><td>mv205</td><td>Charlie and the Chocolate Factory</td><td>5.7</td><td>Sin cambio</td></tr><tr><td>mv206</td><td>Saw III</td><td>5.1</td><td>Sin cambio</td></tr><tr><td>mv207</td><td>Indiana Jones and the Kingdom of the Crystal Skull</td><td>7.2</td><td>dateRelease: 2008-05-01</td></tr><tr><td>mv208</td><td>King Kong</td><td>6.6</td><td>Inserción según enunciado</td></tr></table><h2>Ejecución y evidencia</h2><p>Ejecutar el archivo completo con mongosh o mediante el ejecutor Docker adjunto. Este último guarda la salida real en evidencias/ejecucion.txt. El script muestra los documentos después de cada ejercicio y verifica el resultado final.</p><pre>docker start mongodb-uasd
+./run-practica5-cinemovie-docker.sh</pre><h2 class="page-break">Enunciado proporcionado</h2><figure><img src="assets/evidencias/enunciado-01.jpg" alt="Enunciado, parte 1"><figcaption>Figura 1. Imagen original de la práctica suministrada por el estudiante.</figcaption></figure><figure><img src="assets/evidencias/enunciado-02.jpg" alt="Enunciado, parte 2"><figcaption>Figura 2. Imagen original de la práctica suministrada por el estudiante.</figcaption></figure></main></body></html>
